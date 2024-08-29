@@ -1,9 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    id("kotlin-kapt")
 }
 
+
 android {
+
+
     namespace = "com.example.marvel_app"
     compileSdk = 34
 
@@ -51,6 +56,7 @@ android {
 
 dependencies {
 
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -59,6 +65,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.junit.junit)
+    implementation(libs.engage.core)
+    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,8 +79,52 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     // Room Database
-    implementation("androidx.room:room-runtime:2.5.1")
-    implementation("androidx.room:room-ktx:2.5.1")
+
+    // Use the latest stable version
+//
+//    val  room_version = "2.1.0" // Use the latest version
+//
+//    implementation (libs.androidx.room.runtime)
+//    annotationProcessor (libs.androidx.room.compiler)
+//    kapt ("androidx.room:room-compiler:$room_version") // Only if using Kotlin
 
 
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+//    ksp("androidx.room:room-compiler:$room_version")
+//
+//    implementation("androidx.room:room-runtime:2.5.1")
+//    implementation("androidx.room:room-ktx:2.5.1")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0") // Check for the latest version
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0") // Check for the latest version
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+
+//coil:
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("com.google.accompanist:accompanist-coil:0.15.0")
+
+
+    implementation("io.insert-koin:koin-android:3.3.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.3.0")
+
+//    implementation ("io.insert-koin:koin-androidx-compose:3.4.0")
+
+    testImplementation("io.mockk:mockk:1.13.4") // or the latest version
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("junit:junit:4.13.2")
+
+    //navigations
+
+
+    implementation("androidx.navigation:navigation-compose:2.7.2") // Use the latest version
+
+//    kapt ("android.arch.persistence.room:compiler:1.1.1")
 }
