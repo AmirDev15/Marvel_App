@@ -6,8 +6,5 @@ data class MarvelCharacterDTO(
     val name: String,
     val description: String,
     val thumbnail: ThumbnailDTO,
-    val comics: ContentListDTO,
-    val series: ContentListDTO,
-    val stories: ContentListDTO,
-    val events: ContentListDTO
+
 )
