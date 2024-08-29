@@ -2,9 +2,10 @@ package com.example.marvel_app.domain.model
 
 data class CharacterData(
 
-    val offset: Int,
-    val limit: Int,
-    val total: Int,
-    val count: Int,
-    val results: List<MarvelCharacter>
+    val id: Int,
+    val name: String,
+    val description: String,
+    val imageUrl: String, // Combined from path and extension
+
 )
+
