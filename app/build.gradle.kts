@@ -115,11 +115,16 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.3.0")
     implementation("io.insert-koin:koin-androidx-compose:3.3.0")
 
-//    implementation ("io.insert-koin:koin-androidx-compose:3.4.0")
 
-    testImplementation("io.mockk:mockk:1.13.4") // or the latest version
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    testImplementation("junit:junit:4.13.2")
+
+    // JUnit for unit testing
+    testImplementation ("junit:junit:4.13.2")
+
+    // Mockito for mocking
+    testImplementation ("org.mockito:mockito-core:4.11.0")
+
+    // For Kotlin coroutine testing
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 
     //navigations
 
