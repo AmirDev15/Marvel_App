@@ -154,7 +154,8 @@ class MarvelRepositoryImplTest {
 
 
         assertTrue(result.isEmpty())
-        verify(mockApiService).getCharacters(anyInt(), anyInt(), anyString(), anyString(), anyString(), anyString())
+      
+        verify(mockCharacterDao, never()).insertCharacters(anyOrNull())
     }
 
 
