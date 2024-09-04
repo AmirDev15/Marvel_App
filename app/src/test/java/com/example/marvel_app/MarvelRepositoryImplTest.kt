@@ -154,7 +154,7 @@ class MarvelRepositoryImplTest {
 
 
         assertTrue(result.isEmpty())
-      
+
         verify(mockCharacterDao, never()).insertCharacters(anyOrNull())
     }
 
