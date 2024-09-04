@@ -4,6 +4,7 @@ package com.example.marvel_app.domain.usecase
 import android.util.Log
 import com.example.marvel_app.domain.model.CharacterData
 import com.example.marvel_app.domain.repository.MarvelRepository_domain
+import java.lang.RuntimeException
 
 
 class FetchCharactersUseCase(private val repository: MarvelRepository_domain) {
@@ -15,7 +16,7 @@ class FetchCharactersUseCase(private val repository: MarvelRepository_domain) {
             repository.fetchCharacters(limit, offset, term)
 
 
-        } catch (e: Exception) {
+        } catch (e: RuntimeException) {
 
             emptyList()
         }
