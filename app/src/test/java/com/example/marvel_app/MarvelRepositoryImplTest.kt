@@ -15,6 +15,7 @@ import com.example.marvel_app.data.mapper.constructImageUrl
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.CharacterData
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -27,6 +28,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.anyOrNull
 import retrofit2.Response
+import java.io.IOException
 
 class MarvelRepositoryImplTest {
     // Mocks
@@ -86,7 +88,6 @@ class MarvelRepositoryImplTest {
     @Test
     fun `test fetchCharacters when data is not in database, fetch from API and map`() = runBlocking {
 
-
             val characterData = CharacterData(
                 id = 1,
                 name = "Iron Man",
@@ -94,26 +95,7 @@ class MarvelRepositoryImplTest {
                 imageUrl = "image_url/portrait_xlarge.jpg"
             )
 
-
-
-            // Mock CharacterDao to return an empty list
             `when`(mockCharacterDao.searchCharactersByName("Iron Man")).thenReturn(emptyList())
-
-            // Mock API service response
-//            val mockApiResponse = mock<Response<CharacterResponseDTO>>()
-
-//        val characterResponseNull = CharacterResponseDTO(
-//            data = CharacterDataDTO(
-//                results = listOf(
-//                    MarvelCharacterDTO(
-//                        id = " ".toInt(),
-//                        name = " ",
-//                        description = " ",
-//                        thumbnail = ThumbnailDTO(" "," ")
-//                    )
-//                )
-//            )
-//        )
 
             val characterResponse = CharacterResponseDTO(
                 data = CharacterDataDTO(
@@ -128,20 +110,38 @@ class MarvelRepositoryImplTest {
                 )
             )
             val successResponse = Response.success(characterResponse)
-//        val failedResponse = Response.success(characterResponseNull)
-
 
             `when`(mockApiService.getCharacters(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(successResponse)
-//        `when`(mockApiService.getCharacters(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(failedResponse)
 
-            // Act
             val result = repository.fetchCharacters(limit = 10, offset = 0, term = "Iron Man")
 
-            // Assert
+
             assertEquals(listOf(characterData), result)
-//            assertEquals(listOf(failedResponse),result)
             verify(mockCharacterDao).insertCharacters(anyOrNull())
         }
+
+
+    @Test
+    fun `fetchCharacters returns empty list when API response is null or empty`() = runBlocking {
+
+        val characterName = "Iron Man"
+        `when`(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(emptyList())
+
+
+        `when`(mockApiService.getCharacters(anyInt(), anyInt(), anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(Response.success(null))
+
+        val result = repository.fetchCharacters(limit = 10, offset = 0, term = "Iron Man")
+
+
+        assertTrue(result.isEmpty())
+
+        verify(mockCharacterDao, never()).insertCharacters(anyOrNull())
+    }
+
+
+
+
 
 
 }
