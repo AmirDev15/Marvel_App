@@ -14,6 +14,7 @@ class FetchCharactersUseCase(private val repository: MarvelRepository_domain) {
 
             repository.fetchCharacters(limit, offset, term)
 
+
         } catch (e: Exception) {
 
             emptyList()
