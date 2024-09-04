@@ -139,7 +139,23 @@ class MarvelRepositoryImplTest {
         verify(mockCharacterDao, never()).insertCharacters(anyOrNull())
     }
 
+    @Test
+    fun `test fetchCharacters handles network error`(): Unit = runBlocking {
 
+        val characterName = "Iron Man"
+        `when`(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(emptyList())
+
+
+        `when`(mockApiService.getCharacters(anyInt(), anyInt(), anyString(), anyString(), anyString(), anyString()))
+            .thenAnswer { throw IOException("Network Error") }
+
+
+        val result = repository.fetchCharacters(limit = 10, offset = 0, term = characterName)
+
+
+        assertTrue(result.isEmpty())
+        verify(mockApiService).getCharacters(anyInt(), anyInt(), anyString(), anyString(), anyString(), anyString())
+    }
 
 
 
