@@ -1,4 +1,4 @@
-package com.example.marvel_app
+package com.example.marvel_app.characterTest
 
 import com.example.marvel_app.domain.model.CharacterData
 import com.example.marvel_app.domain.repository.MarvelRepository_domain

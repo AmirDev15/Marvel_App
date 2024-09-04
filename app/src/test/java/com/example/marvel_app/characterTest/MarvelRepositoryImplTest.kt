@@ -1,6 +1,5 @@
-package com.example.marvel_app
+package com.example.marvel_app.characterTest
 
-import androidx.compose.ui.unit.TextUnitType.Companion.Em
 import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
@@ -11,7 +10,6 @@ import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Character
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.ThumbnailDTO
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
-import com.example.marvel_app.data.mapper.constructImageUrl
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.CharacterData
 import junit.framework.TestCase.assertEquals
@@ -19,7 +17,6 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
