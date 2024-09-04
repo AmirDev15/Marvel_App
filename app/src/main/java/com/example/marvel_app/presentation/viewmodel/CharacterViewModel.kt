@@ -20,7 +20,7 @@ import org.koin.core.KoinApplication.Companion.init
 @OptIn(FlowPreview::class)
 class CharacterViewModel(val getMarvelCharactersUseCase: FetchCharactersUseCase) : ViewModel() {
 
-    //we should hold the fetched data list on a mutable list to update each time .always starts as empty list
+
     private val _characters = MutableStateFlow<List<CharacterData>>(emptyList())
     private val _character_for_details = MutableStateFlow<List<CharacterData>>(emptyList())
 
@@ -33,8 +33,6 @@ class CharacterViewModel(val getMarvelCharactersUseCase: FetchCharactersUseCase)
     private val _searchQuery = MutableStateFlow("")
 
 
-//    starts a coroutine in the viewModelScope on the IO dispatcher, which is optimized for network or disk I/O operations.
-//    is used because fetching characters from an API or a database is a blocking operation that should not be done on the main thread.
 
     private fun loadCharacters(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
