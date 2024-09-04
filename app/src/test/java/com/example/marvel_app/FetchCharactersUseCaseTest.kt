@@ -43,4 +43,15 @@ class FetchCharactersUseCaseTest {
         assertEquals(listOf(characterData) , result)
     }
 
+    @Test
+    fun `invoke returns empty list on exception`() = runBlocking {
+        // Given
+        `when`(mockRepository.fetchCharacters(10, 0, "Iron Man")).thenThrow(RuntimeException("Error"))
+
+        // When
+        val result = useCase(limit = 10, offset = 0, term = "Iron Man")
+
+        // Then
+        assertTrue(result.isEmpty())
+    }
 }
