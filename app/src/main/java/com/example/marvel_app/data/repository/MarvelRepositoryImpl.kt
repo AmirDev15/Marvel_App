@@ -23,6 +23,8 @@ import com.example.marvel_app.util.generateHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 
 
 class MarvelRepositoryImpl(
@@ -43,29 +45,33 @@ class MarvelRepositoryImpl(
         offset: Int,
         term: String?,
     ): List<CharacterData> {
-        val characters = characterDao.searchCharactersByName(term)
-//        characterDao.deleteAll()
-        if (characters.isNotEmpty()) {
+        val characters = characterDao.searchCharactersByName(term) ?: emptyList()
 
+        if (characters.isNotEmpty()) {
             return characterEntityToDomain(characters)
         } else {
+            return try {
+                val fetchedCharacters = withContext(Dispatchers.IO) {
+                    val response = apiService.getCharacters(limit, offset, term, ts, publicKey, hash)
 
-            val fetchedCharacters = withContext(Dispatchers.IO) {
-                val response = apiService.getCharacters(limit, offset, term, ts, publicKey, hash)
-
-                if (response.body()?.data?.results.isNullOrEmpty()) {
-
-                    emptyList()
-                } else {
-                    response.body()?.let {
-                        val characterEntities = responseCharacterToEntity(it)
-                        characterDao.insertCharacters(characterEntities)
-                        responseCharacterToDomain(it)
-
-                    } ?: emptyList()
+                    if (response.body()?.data?.results.isNullOrEmpty()) {
+                        emptyList()
+                    } else {
+                        response.body()?.let {
+                            val characterEntities = responseCharacterToEntity(it)
+                            characterDao.insertCharacters(characterEntities)
+                            responseCharacterToDomain(it)
+                        } ?: emptyList()
+                    }
                 }
+                fetchedCharacters
+            } catch (e: IOException) {  // This will catch network errors
+                // Handle network error, log it, etc.
+                emptyList()  // Return empty list in case of network failure
+            } catch (e: HttpException) {  // This will catch HTTP errors
+                // Handle HTTP error
+                emptyList()  // Return empty list in case of HTTP failure
             }
-            return fetchedCharacters
         }
     }
 
