@@ -10,6 +10,9 @@ import com.example.marvel_app.domain.usecase.FetchCharacterDetailsUseCase
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import com.example.marvel_app.presentation.viewmodel.Marvels_Screen
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO_PARALLELISM_PROPERTY_NAME
 
 
 fun initializeDependencies(context: Context): Pair<CharacterViewModel, Marvels_Screen> {
@@ -44,6 +47,8 @@ fun initializeDependencies(context: Context): Pair<CharacterViewModel, Marvels_S
     val fetchCharacterDetailsUseCase = FetchCharacterDetailsUseCase(repository)
 
     // Initialize the ViewModels
+
+
     val characterViewModel = CharacterViewModel(fetchCharactersUseCase)
     val marvelsScreen = Marvels_Screen(fetchCharacterDetailsUseCase)
 
