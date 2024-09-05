@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -28,6 +29,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
@@ -81,6 +84,31 @@ class CharacterViewModelTest {
         // Then
         assertEquals(listOf(characterData), actualCharacters)
     }
+
+
+    @Test
+    fun `onSearchQueryChanged starts search observation`(): Unit = runTest(testDispatcher){
+        // Given
+        val characterName = "3-d man"
+        val characterData = CharacterData(
+            id = 1,
+            name = characterName,
+            description = "Genius billionaire",
+            imageUrl = "image_url"
+        ) // Populate with actual test data
+        `when`(mockUseCase(limit = 10, offset = 0, term = "Iron Man")).thenReturn(listOf(characterData) )
+
+        // When
+        viewModel.onSearchQueryChanged("Iron Man")
+
+        advanceUntilIdle()
+
+
+        assertEquals(listOf(characterData), viewModel.characters.value)
+        verify(mockUseCase).invoke(10, 0, "Iron Man")
+    }
+
+
 }
 
 
