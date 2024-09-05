@@ -1,12 +1,10 @@
 package com.example.marvel_app.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
-import com.example.marvel_app.data.network.RetrofitClient
 import com.example.marvel_app.domain.model.CharacterData
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,11 +12,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import org.koin.core.KoinApplication.Companion.init
 
 
 @OptIn(FlowPreview::class)
-class CharacterViewModel(val getMarvelCharactersUseCase: FetchCharactersUseCase) : ViewModel() {
+class CharacterViewModel(
+    val getMarvelCharactersUseCase: FetchCharactersUseCase,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
+) : ViewModel() {
 
 
     private val _characters = MutableStateFlow<List<CharacterData>>(emptyList())
@@ -35,49 +36,46 @@ class CharacterViewModel(val getMarvelCharactersUseCase: FetchCharactersUseCase)
 
 
     private fun loadCharacters(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             _isLoading.value = true
+//            Log.d("CharacterViewModel", "Loading characters with query: $query")
             try {
                 if (query.isNotEmpty()) {
-
-                    val fetchedCharacters =
-                        getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
+                    val fetchedCharacters = getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
+//                    Log.d("CharacterViewModel", "Fetched characters: $fetchedCharacters")
                     _characters.value = fetchedCharacters
                     _character_for_details.value = fetchedCharacters
                 }
             } catch (e: Exception) {
-
+//                Log.e("CharacterViewModel", "Error loading characters", e)
             } finally {
                 _isLoading.value = false
+//                Log.d("CharacterViewModel", "Loading complete")
             }
         }
     }
 
-
     private fun startSearchObservation() {
-
         viewModelScope.launch {
-
             _searchQuery
-                .debounce(300)  // Wait for 300ms of inactivity before making a call
-                .distinctUntilChanged()  // Only emit when query changes
+                .debounce(300)
+                .distinctUntilChanged()
                 .collect { query ->
+//                    Log.d("CharacterViewModel", "Search query changed: $query")
                     loadCharacters(query)
                 }
         }
     }
 
-    // Tracks whether the search observation has started
     private var hasStartedQueryObservation = false
     fun onSearchQueryChanged(query: String) {
-        Log.d("marvel_search", "onSearchQueryChanged called with query: $query")
+//        Log.d("CharacterViewModel", "onSearchQueryChanged called with query: $query")
         _searchQuery.value = query
         if (!hasStartedQueryObservation) {
             hasStartedQueryObservation = true
             startSearchObservation()
         } else {
             _characters.value = emptyList()
-
         }
     }
 
