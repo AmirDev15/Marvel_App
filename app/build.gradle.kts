@@ -126,11 +126,16 @@ dependencies {
     testImplementation ("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
 
+    testImplementation ("io.mockk:mockk:1.12.0")
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+    testImplementation ("app.cash.turbine:turbine:0.7.0")
     // For Kotlin coroutine testing
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+
 
     //navigations
 
+    testImplementation ("org.mockito:mockito-inline:4.8.1") // use the latest version
 
     implementation("androidx.navigation:navigation-compose:2.7.2") // Use the latest version
 
