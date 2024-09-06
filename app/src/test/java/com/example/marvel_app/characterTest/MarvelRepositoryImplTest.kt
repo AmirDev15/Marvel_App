@@ -93,7 +93,19 @@ class MarvelRepositoryImplTest {
         assertEquals(characterName, characters.first().name)
     }
 
+    @Test
+    fun `fetchCharacters returns empty list when no characters found in database`() = runTest(testDispatcher) {
 
+        val term = "Non existent Character"
+
+        whenever(mockCharacterDao.searchCharactersByName(term)).thenReturn(emptyList())
+
+
+        val characters = repository.fetchCharacters(limit = 10, offset = 0, term = term)
+
+
+        assertTrue(characters.isEmpty())
+    }
 
     @Test
     fun `test fetchCharacters returns mapped data from database`() = runBlocking {
