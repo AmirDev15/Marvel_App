@@ -4,23 +4,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.marvel_app.domain.model.CharacterData
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -49,7 +42,6 @@ class CharacterViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         mockUseCase = mock()
-        // Inject the testDispatcher into the ViewModel
         viewModel = CharacterViewModel(mockUseCase, ioDispatcher = testDispatcher)
     }
 
@@ -63,51 +55,79 @@ class CharacterViewModelTest {
     fun `loadCharacters updates characters state`() = runTest(testDispatcher) {
         val characterName = "3-d man"
         val characterData = CharacterData(
-            id = 1,
-            name = characterName,
-            description = "Genius billionaire",
-            imageUrl = "image_url"
+            id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
         )
 
-        // Setup mock use case to return the character data
-        whenever(mockUseCase(limit = 10, offset = 0, term = characterName)).thenReturn(listOf(characterData))
+        whenever(mockUseCase(limit = 10, offset = 0, term = characterName)).thenReturn(
+            listOf(
+                characterData
+            )
+        )
 
-        // When
         viewModel.onSearchQueryChanged(characterName)
 
-        // Advance until all coroutines are completed
         advanceUntilIdle()
 
-        // Collect the state from the flow
         val actualCharacters = viewModel.characters.first()
 
-        // Then
         assertEquals(listOf(characterData), actualCharacters)
     }
 
 
     @Test
-    fun `onSearchQueryChanged starts search observation`(): Unit = runTest(testDispatcher){
-        // Given
+    fun `onSearchQueryChanged starts search observation`(): Unit = runTest(testDispatcher) {
+
         val characterName = "3-d man"
         val characterData = CharacterData(
-            id = 1,
-            name = characterName,
-            description = "Genius billionaire",
-            imageUrl = "image_url"
-        ) // Populate with actual test data
-        `when`(mockUseCase(limit = 10, offset = 0, term = "Iron Man")).thenReturn(listOf(characterData) )
+            id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
+        )
+        `when`(mockUseCase(limit = 10, offset = 0, term = "Iron Man")).thenReturn(
+            listOf(
+                characterData
+            )
+        )
 
-        // When
         viewModel.onSearchQueryChanged("Iron Man")
 
         advanceUntilIdle()
-
 
         assertEquals(listOf(characterData), viewModel.characters.value)
         verify(mockUseCase).invoke(10, 0, "Iron Man")
     }
 
+    @Test
+    fun `isLoading state is set during loading`() = runTest(testDispatcher) {
+        val characterName = "Iron Man"
+        val characterData = CharacterData(
+            id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
+        )
+
+        whenever(mockUseCase(limit = 10, offset = 0, term = characterName)).thenReturn(
+            listOf(
+                characterData
+            )
+        )
+
+        val isLoadingValues = mutableListOf<Boolean>()
+
+        val job = launch {
+            viewModel.isLoading.collect { value ->
+
+                isLoadingValues.add(value)
+            }
+        }
+
+        viewModel.onSearchQueryChanged(characterName)
+
+        advanceUntilIdle()
+
+        val actualCharacters = viewModel.characters.first()
+
+        assertEquals(listOf(characterData), actualCharacters)
+        assertTrue(isLoadingValues.contains(false))
+        assertTrue(isLoadingValues.contains(true))
+        job.cancel()
+    }
 
 }
 
