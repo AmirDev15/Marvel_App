@@ -77,7 +77,21 @@ class MarvelRepositoryImplTest {
         testDispatcher.cancel()
     }
 
-   
+    @Test
+    fun `fetchCharacters returns characters from database when available`() = runTest(testDispatcher) {
+
+        val characterName = "Iron Man"
+        val characterEntities = listOf(
+            CharacterEntity(id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url")
+        )
+
+        whenever(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(characterEntities)
+
+        val characters = repository.fetchCharacters(limit = 10, offset = 0, term = characterName)
+
+        assertEquals(1, characters.size)
+        assertEquals(characterName, characters.first().name)
+    }
 
 
 
