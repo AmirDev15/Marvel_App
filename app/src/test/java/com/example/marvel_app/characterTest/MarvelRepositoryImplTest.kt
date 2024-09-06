@@ -7,6 +7,7 @@ import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.characterEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToEntity
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
@@ -128,7 +129,7 @@ class MarvelRepositoryImplTest {
 
         assertEquals(listOf(expectedCharacterData), result)
     }
-    
+
 
 
     @Test
@@ -165,6 +166,35 @@ class MarvelRepositoryImplTest {
             assertEquals(listOf(characterData), result)
             verify(mockCharacterDao).insertCharacters(anyOrNull())
         }
+
+
+    @Test
+    fun `responseCharacterToEntity converts API response to database entities`() {
+        // Arrange
+        val marvelCharacterDTO = MarvelCharacterDTO(
+            id = 1,
+            name = "Iron Man",
+            description = "Genius billionaire",
+            thumbnail = ThumbnailDTO("image_url", "jpg")
+        )
+        val apiResponse = CharacterResponseDTO(
+            data = CharacterDataDTO(
+                results = listOf(marvelCharacterDTO)
+            )
+        )
+        val expectedEntity = CharacterEntity(
+            id = 1,
+            name = "Iron Man",
+            description = "Genius billionaire",
+            imageUrl ="image_url.jpg"
+        )
+
+        val result =responseCharacterToEntity(apiResponse)
+
+
+        assertEquals(listOf(expectedEntity), result)
+    }
+
 
 
     @Test
