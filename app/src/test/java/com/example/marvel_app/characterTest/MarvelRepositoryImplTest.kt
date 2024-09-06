@@ -1,5 +1,6 @@
 package com.example.marvel_app.characterTest
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
@@ -14,9 +15,19 @@ import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.CharacterData
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
@@ -24,11 +35,17 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 import retrofit2.Response
 import java.io.IOException
 
 class MarvelRepositoryImplTest {
-    // Mocks
+
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
+
+    private val testDispatcher = StandardTestDispatcher()
+
     private val mockApiService = mock(Marvel_api_service::class.java)
     private val mockCharacterDao = mock(CharacterDao::class.java)
     private val mockComicDao = mock(ComicDao::class.java)
@@ -38,9 +55,12 @@ class MarvelRepositoryImplTest {
     // System under test
     private lateinit var repository: MarvelRepositoryImpl
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
-        // Initialize the repository with mocked dependencies
+
+        Dispatchers.setMain(testDispatcher)
+
         repository = MarvelRepositoryImpl(
             mockApiService,
             mockCharacterDao,
@@ -50,9 +70,20 @@ class MarvelRepositoryImplTest {
         )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testDispatcher.cancel()
+    }
+
+   
+
+
+
     @Test
     fun `test fetchCharacters returns mapped data from database`() = runBlocking {
-        // Arrange
+
         val characterName = "3-d man"
         val characterEntity = CharacterEntity(
             id = 1,
