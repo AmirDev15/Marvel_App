@@ -6,6 +6,7 @@ import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
+import com.example.marvel_app.data.data_source.local.database.mapper.characterEntityToDomain
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
@@ -106,6 +107,28 @@ class MarvelRepositoryImplTest {
 
         assertTrue(characters.isEmpty())
     }
+
+
+    @Test
+    fun `test characterEntityToDomain maps correctly`() {
+        val characterEntity = CharacterEntity(
+            id = 1,
+            name = "3-d man",
+            description = "Genius billionaire",
+            imageUrl = "image_url"
+        )
+        val expectedCharacterData = CharacterData(
+            id = 1,
+            name = "3-d man",
+            description = "Genius billionaire",
+            imageUrl = "image_url"
+        )
+
+        val result = characterEntityToDomain(listOf(characterEntity))
+
+        assertEquals(listOf(expectedCharacterData), result)
+    }
+
 
     @Test
     fun `test fetchCharacters returns mapped data from database`() = runBlocking {
