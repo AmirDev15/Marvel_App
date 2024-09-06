@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class)
 class CharacterViewModel(
     val getMarvelCharactersUseCase: FetchCharactersUseCase,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
 
     private val _characters = MutableStateFlow<List<CharacterData>>(emptyList())
@@ -28,32 +28,39 @@ class CharacterViewModel(
     val characters: StateFlow<List<CharacterData>> get() = _characters
     val character_for_details: StateFlow<List<CharacterData>> get() = _character_for_details
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    private val _searchQuery = MutableStateFlow("")
 
+    val _searchQuery = MutableStateFlow("")
 
+    var loading_state =  MutableStateFlow(false)
 
     private fun loadCharacters(query: String) {
         viewModelScope.launch(ioDispatcher) {
-            _isLoading.value = true
-//            Log.d("CharacterViewModel", "Loading characters with query: $query")
             try {
                 if (query.isNotEmpty()) {
-                    val fetchedCharacters = getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
-//                    Log.d("CharacterViewModel", "Fetched characters: $fetchedCharacters")
+                    val fetchedCharacters =
+                        getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
+                    _isLoading.value = true
                     _characters.value = fetchedCharacters
                     _character_for_details.value = fetchedCharacters
+                    loading_state.value = true
+
                 }
             } catch (e: Exception) {
 //                Log.e("CharacterViewModel", "Error loading characters", e)
             } finally {
                 _isLoading.value = false
-//                Log.d("CharacterViewModel", "Loading complete")
+                loading_state.value=false
+
+
             }
+
         }
+
     }
+
 
     private fun startSearchObservation() {
         viewModelScope.launch {
