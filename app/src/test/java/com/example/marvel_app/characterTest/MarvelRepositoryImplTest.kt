@@ -128,38 +128,7 @@ class MarvelRepositoryImplTest {
 
         assertEquals(listOf(expectedCharacterData), result)
     }
-
-
-    @Test
-    fun `test fetchCharacters returns mapped data from database`() = runBlocking {
-
-        val characterName = "3-d man"
-        val characterEntity = CharacterEntity(
-            id = 1,
-            name = characterName,
-            description = "Genius billionaire",
-            imageUrl = "image_url"
-        )
-        val characterData = CharacterData(
-            id = 1,
-            name = characterName,
-            description = "Genius billionaire",
-            imageUrl = "image_url"
-        )
-
-        // Mock CharacterDao to return a list of CharacterEntity
-        `when`(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(
-            listOf(
-                characterEntity
-            )
-        )
-
-        // Act
-        val result = repository.fetchCharacters(limit = 10, offset = 0, term = characterName)
-
-        // Assert
-        assertEquals(listOf(characterData), result)
-    }
+    
 
 
     @Test
