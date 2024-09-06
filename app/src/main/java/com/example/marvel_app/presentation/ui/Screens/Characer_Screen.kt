@@ -24,7 +24,7 @@ import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 fun MarvelScreen(viewModel: CharacterViewModel, navController: NavController) {
 
     val characters by viewModel.characters.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val loading_state by viewModel.loading_state.collectAsState()
 
     Scaffold(topBar = {
         TopAppBar(title = { Text("Marvel Characters") })
@@ -46,15 +46,14 @@ fun MarvelScreen(viewModel: CharacterViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Loading Indicator
-            if (isLoading) {
+            if (loading_state) {
                 Text(
                     "Loading character...",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
             } else if (characters.isEmpty()) {
-                // Handle the case when no characters are found
+
                 Text(
                     "No characters found",
                     modifier = Modifier.fillMaxWidth(),
@@ -62,7 +61,6 @@ fun MarvelScreen(viewModel: CharacterViewModel, navController: NavController) {
                 )
             } else {
 
-                // Display the list of characters
                 LazyColumn {
                     items(characters) { character ->
                         CharacterItem(character, navController)
