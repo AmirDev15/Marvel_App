@@ -55,8 +55,6 @@ class MarvelRepositoryImplTest {
     private val mockComicDao = mock(ComicDao::class.java)
     private val mockSeriesDao = mock(SeriesDao::class.java)
     private val mockEventDao = mock(EventDao::class.java)
-
-
     private lateinit var repository: MarvelRepositoryImpl
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -95,6 +93,13 @@ class MarvelRepositoryImplTest {
                 )
             )
 
+            val expectedCharacterData = CharacterData(
+                id = 1,
+                name = characterName,
+                description = "Genius billionaire",
+                imageUrl = "image_url"
+            )
+
             whenever(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(
                 characterEntities
             )
@@ -104,6 +109,7 @@ class MarvelRepositoryImplTest {
 
             assertEquals(1, characters.size)
             assertEquals(characterName, characters.first().name)
+            assertEquals(expectedCharacterData,characters.first())
         }
 
 
