@@ -86,7 +86,7 @@ class MarvelRepositoryImplTest {
 
     @Test
     fun `fetchComicsAndSeries returns data from database`() = runTest {
-        // Arrange
+
         val characterId = 101
         val comics = listOf(ComicEntity(1, "Comic 1", "Description", "imageUrl", characterId))
         val series = listOf(SeriesEntity(2, "Series 1", "Description", "imageUrl", characterId))
@@ -96,7 +96,7 @@ class MarvelRepositoryImplTest {
         whenever(mockSeriesDao.getSeriesForCharacter(characterId)).thenReturn(series)
         whenever(mockEventDao.getEventsForCharacter(characterId)).thenReturn(events)
 
-        // Act
+     
         val result = repository.fetchComicsAndSeries(characterId)
 
         assertEquals(characterId, result.first.first().characterId)
@@ -268,7 +268,7 @@ class MarvelRepositoryImplTest {
 
     @Test
     fun `fetchComicsAndSeries returns empty list on API failure`() = runTest {
-        // Arrange
+
         val characterId = 101
 
 
@@ -280,10 +280,10 @@ class MarvelRepositoryImplTest {
         whenever(mockApiService.getSeriesForCharacter(characterId)) .thenAnswer { throw IOException("Network Error") }
         whenever(mockApiService.getEventsForCharacter(characterId)) .thenAnswer { throw IOException("Network Error") }
 
-        // Act
+
         val result = repository.fetchComicsAndSeries(characterId)
 
-        // Assert
+
         assertTrue(result.first.isEmpty())
         assertTrue(result.second.isEmpty())
         assertTrue(result.third.isEmpty())
