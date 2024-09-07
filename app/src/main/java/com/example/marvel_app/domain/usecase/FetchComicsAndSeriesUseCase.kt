@@ -1,6 +1,5 @@
 package com.example.marvel_app.domain.usecase
 
-import android.util.Log
 import com.example.marvel_app.domain.model.Marvels_Data
 import com.example.marvel_app.domain.repository.MarvelRepository_domain
 
