@@ -101,10 +101,6 @@ class MarvelRepositoryImpl(
 
                 val (apiComics, apiSeries, apiEvents) = withContext(Dispatchers.IO) {
 
-                    // Start timing individual requests
-                    val comicsStartTime = System.currentTimeMillis()
-                    val seriesStartTime = System.currentTimeMillis()
-                    val eventsStartTime = System.currentTimeMillis()
 
                     val comicsDeferred = async { apiService.getComicsForCharacter(characterId) }
                     val seriesDeferred = async { apiService.getSeriesForCharacter(characterId) }
@@ -139,14 +135,10 @@ class MarvelRepositoryImpl(
                     }
 
                 }
-                // Calculate total duration and average time
-                val endTime = System.currentTimeMillis()
-                val totalDurationMillis = endTime - startTime
-                val totalDurationMinutes = totalDurationMillis / 60000.0
                 return Triple(apiComics, apiSeries, apiEvents)
 
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
         return Triple(emptyList(), emptyList(), emptyList())
 
