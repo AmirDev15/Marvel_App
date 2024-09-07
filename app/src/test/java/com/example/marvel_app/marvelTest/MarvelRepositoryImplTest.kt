@@ -12,6 +12,7 @@ import com.example.marvel_app.data.data_source.local.database.entity.SeriesEntit
 import com.example.marvel_app.data.data_source.local.database.mapper.comicEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.eventEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntityComics
+import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.seriesEntityToDomain
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
@@ -23,7 +24,9 @@ import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.details_thubnail
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.ThumbnailDTO
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
+import com.example.marvel_app.data.mapper.mapToDomainCharacterDetails
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
+import com.example.marvel_app.domain.model.CharacterData
 import com.example.marvel_app.domain.model.Marvels_Data
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -227,5 +230,35 @@ class MarvelRepositoryImplTest {
         assertEquals(listOf(expectedComicEntity), result)
     }
 
+    @Test
+    fun `mapToDomainCharacterDetails converts API response to domain models`() {
+
+        val mockCharacterDetails = CharacterDetails(
+            data = CharacterDetailsData(
+                results = listOf(
+                    Character_Details_Data(
+                        id = 1011334,
+                        title = "Spider-Man",
+                        description = "desc",
+                        thumbnail = details_thubnail(path = "image_url", extension = "jpg")
+                    )
+                )
+            )
+
+        )
+        val expectedData = Marvels_Data(
+            1011334,
+            "Spider-Man",
+            "desc",
+            "image_url/portrait_xlarge.jpg",
+            characterId= 101
+
+        )
+
+
+        val result = mapToDomainCharacterDetails(mockCharacterDetails, characterId = 101)
+
+        assertEquals(listOf(expectedData), result)
+    }
 
 }
