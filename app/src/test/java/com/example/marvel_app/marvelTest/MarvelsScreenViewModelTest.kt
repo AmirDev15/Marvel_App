@@ -47,5 +47,13 @@ class MarvelsScreenViewModelTest {
     }
 
 
+    @Test
+    fun `initial state is correct`() = runTest(testDispatcher)  {
+        assertTrue(viewModel.comics.value.isEmpty())
+        assertTrue(viewModel.series.value.isEmpty())
+        assertTrue(viewModel.events.value.isEmpty())
+        assertFalse(viewModel.isLoading.value)
+    }
+
 
 }
