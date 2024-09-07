@@ -5,12 +5,14 @@ import com.example.marvel_app.domain.repository.MarvelRepository_domain
 import com.example.marvel_app.domain.usecase.FetchCharacterDetailsUseCase
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
+import java.io.IOException
 
 class FetchCharacterDetailsUseCaseTest {
 
@@ -39,6 +41,22 @@ class FetchCharacterDetailsUseCaseTest {
         verify(mockRepository).fetchComicsAndSeries(characterId)
     }
 
+    @Test
+    fun `execute returns empty lists when repository throws exception`() = runTest {
+        // Arrange
+        val characterId = 101
+
+        whenever(mockRepository.fetchComicsAndSeries(characterId)).thenThrow(RuntimeException("Network error"))
+
+        // Act
+        val result = useCase.execute(characterId)
+
+        // Assert
+        assertTrue(result.first.isEmpty()) 
+        assertTrue(result.second.isEmpty())
+        assertTrue(result.third.isEmpty())
+        verify(mockRepository).fetchComicsAndSeries(characterId)
+    }
 
 
 }

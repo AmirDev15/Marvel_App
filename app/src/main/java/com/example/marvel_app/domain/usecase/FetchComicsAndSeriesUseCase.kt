@@ -7,7 +7,7 @@ class FetchCharacterDetailsUseCase(private val repository: MarvelRepository_doma
     suspend fun execute(characterId: Int): Triple<List<Marvels_Data>, List<Marvels_Data>, List<Marvels_Data>> {
         return try {
             repository.fetchComicsAndSeries(characterId)
-        } catch (e: Exception) {
+        } catch (e: RuntimeException) {
             Triple(emptyList(), emptyList(), emptyList())
         }
     }

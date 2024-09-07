@@ -50,4 +50,5 @@ class FetchCharactersUseCaseTest {
 
         assertTrue(result.isEmpty())
     }
+
 }
