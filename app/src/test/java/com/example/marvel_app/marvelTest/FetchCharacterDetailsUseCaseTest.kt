@@ -52,7 +52,7 @@ class FetchCharacterDetailsUseCaseTest {
         val result = useCase.execute(characterId)
 
         // Assert
-        assertTrue(result.first.isEmpty()) 
+        assertTrue(result.first.isEmpty())
         assertTrue(result.second.isEmpty())
         assertTrue(result.third.isEmpty())
         verify(mockRepository).fetchComicsAndSeries(characterId)
