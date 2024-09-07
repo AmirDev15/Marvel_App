@@ -23,6 +23,7 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class MarvelsScreenViewModelTest {
@@ -77,5 +78,20 @@ class MarvelsScreenViewModelTest {
         assertFalse(viewModel.isLoading.value)
     }
 
+    @Test
+    fun `fetchComicsAndSeries handles error correctly`() = runBlockingTest {
+        // Arrange
+        val characterId = 101
 
+        whenever(mockFetchComicsAndSeriesUseCase.execute(characterId)).thenThrow(RuntimeException("Network error"))
+
+        // Act
+        viewModel.fetchComicsAndSeries(characterId)
+
+        // Assert
+        assertTrue(viewModel.comics.value.isEmpty())
+        assertTrue(viewModel.series.value.isEmpty())
+        assertTrue(viewModel.events.value.isEmpty())
+        assertFalse(viewModel.isLoading.value)
+    }
 }

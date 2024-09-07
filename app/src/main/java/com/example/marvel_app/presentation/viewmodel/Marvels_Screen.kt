@@ -40,7 +40,7 @@ class Marvels_Screen(
                 _comics.value = comics
                 _series.value = (series)
                 _events.value = (events)
-            } catch (e: Exception) {
+            } catch (_: RuntimeException) {
             } finally {
                 _isLoading.value = false
             }
