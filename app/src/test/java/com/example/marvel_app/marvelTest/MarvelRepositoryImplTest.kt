@@ -117,6 +117,77 @@ class MarvelRepositoryImplTest {
     }
 
 
+    @Test
+    fun `fetchComicsAndSeries fetches from API and saves to database`() = runTest {
+
+        val characterId = 101
+
+        whenever(mockComicDao.getComicsForCharacter(characterId)).thenReturn(emptyList())
+        whenever(mockSeriesDao.getSeriesForCharacter(characterId)).thenReturn(emptyList())
+        whenever(mockEventDao.getEventsForCharacter(characterId)).thenReturn(emptyList())
+
+        val mockCharacterDetails = CharacterDetails(
+            data = CharacterDetailsData(
+                results = listOf(
+                    Character_Details_Data(
+                        id = 1011334,
+                        title = "Spider-Man",
+                        description = "desc",
+                        thumbnail = details_thubnail(path = "image_url", extension = "jpg")
+                    )
+                )
+            )
+
+        )
+
+        val comicsResponse = Response.success(mockCharacterDetails)
+        val seriesResponse = Response.success(mockCharacterDetails)
+        val eventsResponse = Response.success(mockCharacterDetails)
+
+        `when`(mockApiService.getComicsForCharacter(characterId)).thenReturn(comicsResponse)
+        `when`(mockApiService.getSeriesForCharacter(characterId)).thenReturn(seriesResponse)
+        `when`(mockApiService.getEventsForCharacter(characterId)).thenReturn(eventsResponse)
+
+
+        val expectedComics =
+            listOf(
+                Marvels_Data(
+                    1011334,
+                    "Spider-Man",
+                    "desc",
+                    "image_url/portrait_xlarge.jpg",
+                    characterId
+                )
+            )
+        val expectedSeries =
+            listOf(
+                Marvels_Data(
+                    1011334,
+                    "Spider-Man",
+                    "desc",
+                    "image_url/portrait_xlarge.jpg",
+                    characterId
+                )
+            )
+        val expectedEvents =
+            listOf(
+                Marvels_Data(
+                    1011334,
+                    "Spider-Man",
+                    "desc",
+                    "image_url/portrait_xlarge.jpg",
+                    characterId
+                )
+            )
+
+        val result = repository.fetchComicsAndSeries(characterId)
+
+        // Assert
+        verify(mockComicDao).insertComics(anyList())
+        verify(mockSeriesDao).insertSeries(anyList())
+        verify(mockEventDao).insertEvents(anyList())
+        assertEquals(Triple(expectedComics, expectedSeries, expectedEvents), result)
+    }
 
 
 
