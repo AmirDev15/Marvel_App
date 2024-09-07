@@ -5,16 +5,23 @@ import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
+import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
 import com.example.marvel_app.data.data_source.local.database.entity.ComicEntity
 import com.example.marvel_app.data.data_source.local.database.entity.EventsEntity
 import com.example.marvel_app.data.data_source.local.database.entity.SeriesEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.comicEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.eventEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntityComics
+import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.seriesEntityToDomain
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.CharacterDetails
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.CharacterDetailsData
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.Character_Details_Data
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.details_thubnail
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.ThumbnailDTO
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.Marvels_Data
@@ -189,7 +196,36 @@ class MarvelRepositoryImplTest {
         assertEquals(Triple(expectedComics, expectedSeries, expectedEvents), result)
     }
 
+    @Test
+    fun `mapToEntityComics converts API response to database entities`() {
 
+        val mockCharacterDetails = CharacterDetails(
+            data = CharacterDetailsData(
+                results = listOf(
+                    Character_Details_Data(
+                        id = 1011334,
+                        title = "Spider-Man",
+                        description = "desc",
+                        thumbnail = details_thubnail(path = "image_url", extension = "jpg")
+                    )
+                )
+            )
+
+        )
+        val expectedComicEntity = ComicEntity(
+                    1011334,
+                    "Spider-Man",
+                    "desc",
+                    "image_url/portrait_xlarge.jpg",
+                    characterId= 101
+
+            )
+
+        val result = mapToEntityComics(mockCharacterDetails, characterId = 101)
+
+
+        assertEquals(listOf(expectedComicEntity), result)
+    }
 
 
 }
