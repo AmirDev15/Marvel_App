@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
@@ -37,7 +38,7 @@ class MarvelsScreenViewModelTest {
 
         Dispatchers.setMain(testDispatcher)
         mockFetchComicsAndSeriesUseCase = mock()
-        viewModel = Marvels_Screen(fetchComicsAndSeriesUseCase = mockFetchComicsAndSeriesUseCase)
+        viewModel = Marvels_Screen(fetchComicsAndSeriesUseCase = mockFetchComicsAndSeriesUseCase,ioDispatcher = testDispatcher)
     }
 
     @After
@@ -53,6 +54,27 @@ class MarvelsScreenViewModelTest {
         assertTrue(viewModel.series.value.isEmpty())
         assertTrue(viewModel.events.value.isEmpty())
         assertFalse(viewModel.isLoading.value)
+    }
+
+    @Test
+    fun `fetchComicsAndSeries updates state correctly with data`() =  runTest(testDispatcher)  {
+
+        val characterId = 101
+        val comics = listOf(Marvels_Data(1, "Comic", "Description", "thumbnailUrl", characterId))
+        val series = listOf(Marvels_Data(2, "Series", "Description", "thumbnailUrl", characterId))
+        val events = listOf(Marvels_Data(3, "Event", "Description", "thumbnailUrl", characterId))
+
+        whenever(mockFetchComicsAndSeriesUseCase.execute(characterId))
+            .thenReturn(Triple(comics, series, events))
+
+
+        viewModel.fetchComicsAndSeries(characterId)
+        advanceUntilIdle()
+
+        assertTrue(viewModel.comics.value == comics)
+        assertTrue(viewModel.series.value == series)
+        assertTrue(viewModel.events.value == events)
+//        assertFalse(viewModel.isLoading.value)
     }
 
 

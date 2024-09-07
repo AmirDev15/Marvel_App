@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvel_app.domain.model.Marvels_Data
 import com.example.marvel_app.domain.usecase.FetchCharacterDetailsUseCase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class Marvels_Screen(
     val fetchComicsAndSeriesUseCase: FetchCharacterDetailsUseCase,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _comics = MutableStateFlow<List<Marvels_Data>>(emptyList())
@@ -26,7 +29,7 @@ class Marvels_Screen(
 
 
     fun fetchComicsAndSeries(characterId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             _isLoading.value = true
 
             _comics.value = emptyList()
