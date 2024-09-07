@@ -79,7 +79,7 @@ class MarvelsScreenViewModelTest {
     }
 
     @Test
-    fun `fetchComicsAndSeries handles error correctly`() = runBlockingTest {
+    fun `fetchComicsAndSeries handles error correctly`() = runTest(testDispatcher)  {
         // Arrange
         val characterId = 101
 
