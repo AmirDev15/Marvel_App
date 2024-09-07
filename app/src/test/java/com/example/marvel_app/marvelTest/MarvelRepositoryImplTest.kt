@@ -38,6 +38,8 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -286,5 +288,32 @@ class MarvelRepositoryImplTest {
         assertTrue(result.second.isEmpty())
         assertTrue(result.third.isEmpty())
     }
+
+    @Test
+    fun `fetchComicsAndSeries returns empty list on API unsuccessful response`() = runTest {
+
+        val characterId = 101
+
+        whenever(mockComicDao.getComicsForCharacter(characterId)).thenReturn(emptyList())
+        whenever(mockSeriesDao.getSeriesForCharacter(characterId)).thenReturn(emptyList())
+        whenever(mockEventDao.getEventsForCharacter(characterId)).thenReturn(emptyList())
+
+
+        val unsuccessfulResponse: Response<CharacterDetails> = Response.error(400,
+            "Bad Request".toResponseBody(null)
+        )
+        whenever(mockApiService.getComicsForCharacter(characterId)).thenReturn(unsuccessfulResponse)
+        whenever(mockApiService.getSeriesForCharacter(characterId)).thenReturn(unsuccessfulResponse)
+        whenever(mockApiService.getEventsForCharacter(characterId)).thenReturn(unsuccessfulResponse)
+
+
+        val result = repository.fetchComicsAndSeries(characterId)
+
+
+        assertTrue(result.first.isEmpty())
+        assertTrue(result.second.isEmpty())
+        assertTrue(result.third.isEmpty())
+    }
+
 
 }
