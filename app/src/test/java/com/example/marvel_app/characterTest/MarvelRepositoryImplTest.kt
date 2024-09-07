@@ -56,7 +56,7 @@ class MarvelRepositoryImplTest {
     private val mockSeriesDao = mock(SeriesDao::class.java)
     private val mockEventDao = mock(EventDao::class.java)
 
-    
+
     private lateinit var repository: MarvelRepositoryImpl
 
     @OptIn(ExperimentalCoroutinesApi::class)

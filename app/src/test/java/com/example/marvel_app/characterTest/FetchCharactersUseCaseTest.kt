@@ -26,32 +26,28 @@ class FetchCharactersUseCaseTest {
     @Test
     fun `invoke returns characters from repository`() = runBlocking {
 
-
         val characterName = "3-d man"
         val characterData = CharacterData(
-            id = 1,
-            name = characterName,
-            description = "Genius billionaire",
-            imageUrl = "image_url"
+            id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
         )
         `when`(mockRepository.fetchCharacters(10, 0, characterName)).thenReturn(listOf(characterData))
 
-
         val result = useCase(limit = 10, offset = 0, term = characterName)
 
-
-        assertEquals(listOf(characterData) , result)
+        assertEquals(listOf(characterData), result)
     }
 
     @Test
     fun `invoke returns empty list on exception`() = runBlocking {
-        // Given
-        `when`(mockRepository.fetchCharacters(10, 0, "Iron Man")).thenThrow(RuntimeException("Error"))
 
-        // When
+        `when`(
+            mockRepository.fetchCharacters(
+                10, 0, "Iron Man"
+            )
+        ).thenThrow(RuntimeException("Error"))
+
         val result = useCase(limit = 10, offset = 0, term = "Iron Man")
 
-        // Then
         assertTrue(result.isEmpty())
     }
 }
