@@ -28,7 +28,9 @@ import com.example.marvel_app.data.mapper.mapToDomainCharacterDetails
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.CharacterData
 import com.example.marvel_app.domain.model.Marvels_Data
+import com.google.android.engage.travel.datamodel.EventEntity
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -48,6 +50,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import retrofit2.Response
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class MarvelRepositoryImplTest {
@@ -259,6 +262,29 @@ class MarvelRepositoryImplTest {
         val result = mapToDomainCharacterDetails(mockCharacterDetails, characterId = 101)
 
         assertEquals(listOf(expectedData), result)
+    }
+
+    @Test
+    fun `fetchComicsAndSeries returns empty list on API failure`() = runTest {
+        // Arrange
+        val characterId = 101
+
+
+        whenever(mockComicDao.getComicsForCharacter(characterId)).thenReturn(emptyList())
+        whenever(mockSeriesDao.getSeriesForCharacter(characterId)).thenReturn(emptyList())
+        whenever(mockEventDao.getEventsForCharacter(characterId)).thenReturn(emptyList())
+
+        whenever(mockApiService.getComicsForCharacter(characterId)) .thenAnswer { throw IOException("Network Error") }
+        whenever(mockApiService.getSeriesForCharacter(characterId)) .thenAnswer { throw IOException("Network Error") }
+        whenever(mockApiService.getEventsForCharacter(characterId)) .thenAnswer { throw IOException("Network Error") }
+
+        // Act
+        val result = repository.fetchComicsAndSeries(characterId)
+
+        // Assert
+        assertTrue(result.first.isEmpty())
+        assertTrue(result.second.isEmpty())
+        assertTrue(result.third.isEmpty())
     }
 
 }
