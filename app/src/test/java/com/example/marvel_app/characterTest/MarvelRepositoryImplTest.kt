@@ -8,10 +8,6 @@ import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.characterEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToEntity
-import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
-import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
-import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
-import com.example.marvel_app.data.data_source.remote.Api_response_Dto.ThumbnailDTO
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.CharacterData

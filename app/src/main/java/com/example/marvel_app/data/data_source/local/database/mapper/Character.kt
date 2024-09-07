@@ -1,7 +1,6 @@
 package com.example.marvel_app.data.data_source.local.database.mapper
 
 import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
-import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
 import com.example.marvel_app.data.mapper.constructImageUrl
 import com.example.marvel_app.domain.model.CharacterData
 
