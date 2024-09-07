@@ -96,7 +96,7 @@ class MarvelRepositoryImplTest {
         whenever(mockSeriesDao.getSeriesForCharacter(characterId)).thenReturn(series)
         whenever(mockEventDao.getEventsForCharacter(characterId)).thenReturn(events)
 
-     
+
         val result = repository.fetchComicsAndSeries(characterId)
 
         assertEquals(characterId, result.first.first().characterId)
