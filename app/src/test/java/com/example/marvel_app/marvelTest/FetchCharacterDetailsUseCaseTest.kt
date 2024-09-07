@@ -23,7 +23,21 @@ class FetchCharacterDetailsUseCaseTest {
         useCase = FetchCharacterDetailsUseCase(mockRepository)
     }
 
+    @Test
+    fun `execute successfully fetches comics, series, and events`() = runTest {
 
+        val characterId = 101
+        val expectedComics = listOf(Marvels_Data(1, "Comic Title", "Comic Description", "comic_image_url", characterId))
+        val expectedSeries = listOf(Marvels_Data(2, "Series Title", "Series Description", "series_image_url", characterId))
+        val expectedEvents = listOf(Marvels_Data(3, "Event Title", "Event Description", "event_image_url", characterId))
+
+        whenever(mockRepository.fetchComicsAndSeries(characterId)).thenReturn(Triple(expectedComics, expectedSeries, expectedEvents))
+
+        val result = useCase.execute(characterId)
+
+        assertEquals(Triple(expectedComics, expectedSeries, expectedEvents), result)
+        verify(mockRepository).fetchComicsAndSeries(characterId)
+    }
 
 
 
