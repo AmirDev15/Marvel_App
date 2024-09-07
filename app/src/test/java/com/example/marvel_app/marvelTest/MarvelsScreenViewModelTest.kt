@@ -74,7 +74,7 @@ class MarvelsScreenViewModelTest {
         assertTrue(viewModel.comics.value == comics)
         assertTrue(viewModel.series.value == series)
         assertTrue(viewModel.events.value == events)
-//        assertFalse(viewModel.isLoading.value)
+        assertFalse(viewModel.isLoading.value)
     }
 
 
