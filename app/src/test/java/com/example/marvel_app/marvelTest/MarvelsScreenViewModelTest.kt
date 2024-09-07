@@ -10,10 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -23,7 +21,6 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
-import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class MarvelsScreenViewModelTest {
