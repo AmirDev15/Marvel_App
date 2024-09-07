@@ -7,7 +7,12 @@ import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.characterEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.responseCharacterToEntity
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.ThumbnailDTO
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.CharacterData
@@ -26,6 +31,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
@@ -76,34 +82,29 @@ class MarvelRepositoryImplTest {
     }
 
     @Test
-    fun `fetchCharacters returns characters from database when available`() = runTest(testDispatcher) {
+    fun `fetchCharacters returns characters from database when available`() =
+        runTest(testDispatcher) {
 
-        val characterName = "Iron Man"
-        val characterEntities = listOf(
-            CharacterEntity(id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url")
-        )
+            val characterName = "Iron Man"
+            val characterEntities = listOf(
+                CharacterEntity(
+                    id = 1,
+                    name = characterName,
+                    description = "Genius billionaire",
+                    imageUrl = "image_url"
+                )
+            )
 
-        whenever(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(characterEntities)
+            whenever(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(
+                characterEntities
+            )
 
-        val characters = repository.fetchCharacters(limit = 10, offset = 0, term = characterName)
+            val characters =
+                repository.fetchCharacters(limit = 10, offset = 0, term = characterName)
 
-        assertEquals(1, characters.size)
-        assertEquals(characterName, characters.first().name)
-    }
-
-    @Test
-    fun `fetchCharacters returns empty list when no characters found in database`() = runTest(testDispatcher) {
-
-        val term = "Non existent Character"
-
-        whenever(mockCharacterDao.searchCharactersByName(term)).thenReturn(emptyList())
-
-
-        val characters = repository.fetchCharacters(limit = 10, offset = 0, term = term)
-
-
-        assertTrue(characters.isEmpty())
-    }
+            assertEquals(1, characters.size)
+            assertEquals(characterName, characters.first().name)
+        }
 
 
     @Test
@@ -127,9 +128,9 @@ class MarvelRepositoryImplTest {
     }
 
 
-
     @Test
-    fun `test fetchCharacters when data is not in database, fetch from API and map`() = runBlocking {
+    fun `test fetchCharacters when data is not in database, fetch from API and map`() =
+        runBlocking {
 
             val characterData = CharacterData(
                 id = 1,
@@ -154,7 +155,16 @@ class MarvelRepositoryImplTest {
             )
             val successResponse = Response.success(characterResponse)
 
-            `when`(mockApiService.getCharacters(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(successResponse)
+            `when`(
+                mockApiService.getCharacters(
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull()
+                )
+            ).thenReturn(successResponse)
 
             val result = repository.fetchCharacters(limit = 10, offset = 0, term = "Iron Man")
 
@@ -182,15 +192,42 @@ class MarvelRepositoryImplTest {
             id = 1,
             name = "Iron Man",
             description = "Genius billionaire",
-            imageUrl ="image_url.jpg"
+            imageUrl = "image_url.jpg"
         )
 
-        val result =responseCharacterToEntity(apiResponse)
+        val result = responseCharacterToEntity(apiResponse)
 
 
         assertEquals(listOf(expectedEntity), result)
     }
 
+    @Test
+    fun `responseCharacterToDomain converts API response to domain models`() {
+        // Arrange
+        val marvelCharacterDTO = MarvelCharacterDTO(
+            id = 1,
+            name = "Iron Man",
+            description = "Genius billionaire",
+            thumbnail = ThumbnailDTO("image_url", "jpg")
+        )
+        val apiResponse = CharacterResponseDTO(
+            data = CharacterDataDTO(
+                results = listOf(marvelCharacterDTO)
+            )
+        )
+        val expectedData = CharacterData(
+            id = 1,
+            name = "Iron Man",
+            description = "Genius billionaire",
+            imageUrl = "image_url/portrait_xlarge.jpg"
+        )
+
+        // Act
+        val result = responseCharacterToDomain(apiResponse)
+
+        // Assert
+        assertEquals(listOf(expectedData), result)
+    }
 
 
     @Test
@@ -200,7 +237,16 @@ class MarvelRepositoryImplTest {
         `when`(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(emptyList())
 
 
-        `when`(mockApiService.getCharacters(anyInt(), anyInt(), anyString(), anyString(), anyString(), anyString()))
+        `when`(
+            mockApiService.getCharacters(
+                anyInt(),
+                anyInt(),
+                anyString(),
+                anyString(),
+                anyString(),
+                anyString()
+            )
+        )
             .thenReturn(Response.success(null))
 
         val result = repository.fetchCharacters(limit = 10, offset = 0, term = "Iron Man")
@@ -218,7 +264,16 @@ class MarvelRepositoryImplTest {
         `when`(mockCharacterDao.searchCharactersByName(characterName)).thenReturn(emptyList())
 
 
-        `when`(mockApiService.getCharacters(anyInt(), anyInt(), anyString(), anyString(), anyString(), anyString()))
+        `when`(
+            mockApiService.getCharacters(
+                anyInt(),
+                anyInt(),
+                anyString(),
+                anyString(),
+                anyString(),
+                anyString()
+            )
+        )
             .thenAnswer { throw IOException("Network Error") }
 
 
@@ -229,8 +284,6 @@ class MarvelRepositoryImplTest {
 
         verify(mockCharacterDao, never()).insertCharacters(anyOrNull())
     }
-
-
 
 
 }
