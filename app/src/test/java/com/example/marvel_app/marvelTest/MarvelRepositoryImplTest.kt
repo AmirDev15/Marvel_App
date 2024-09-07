@@ -11,9 +11,13 @@ import com.example.marvel_app.data.data_source.local.database.entity.SeriesEntit
 import com.example.marvel_app.data.data_source.local.database.mapper.comicEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.eventEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.seriesEntityToDomain
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.CharacterDetails
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.CharacterDetailsData
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.Character_Details_Data
+import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.details_thubnail
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
-import com.google.android.engage.travel.datamodel.EventEntity
+import com.example.marvel_app.domain.model.Marvels_Data
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,8 +31,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
+import org.mockito.ArgumentMatchers.anyList
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
+import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 class MarvelRepositoryImplTest {
@@ -80,6 +89,36 @@ class MarvelRepositoryImplTest {
         assertEquals(seriesEntityToDomain(series), result.second)
         assertEquals(eventEntityToDomain(events), result.third)
     }
+
+
+    @Test
+    fun `test comicEntityToDomain maps correctly`() {
+
+        val comics = ComicEntity(
+            id = 1,
+            title = "Comic 1",
+            description = "Description",
+            imageUrl = "image_Url",
+            characterId = 2
+        )
+
+        val expectedComics = Marvels_Data(
+            id = 1,
+            title = "Comic 1",
+            description = "Description",
+            imageUrl = "image_Url",
+            characterId = 2
+        )
+
+
+        val result = comicEntityToDomain(listOf(comics))
+
+        assertEquals(listOf(expectedComics), result)
+    }
+
+
+
+
 
 
 }
