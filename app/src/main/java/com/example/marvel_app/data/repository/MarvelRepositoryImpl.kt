@@ -97,8 +97,6 @@ class MarvelRepositoryImpl(
                 )
             } else {
 
-                val startTime = System.currentTimeMillis()
-
                 val (apiComics, apiSeries, apiEvents) = withContext(Dispatchers.IO) {
 
 
