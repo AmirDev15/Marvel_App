@@ -33,13 +33,13 @@ class FetchCharactersUseCaseTest {
             name = characterName,
             description = "Genius billionaire",
             imageUrl = "image_url"
-        ) // Populate with actual test data
+        )
         `when`(mockRepository.fetchCharacters(10, 0, characterName)).thenReturn(listOf(characterData))
 
-        // When
+
         val result = useCase(limit = 10, offset = 0, term = characterName)
 
-        // Then
+
         assertEquals(listOf(characterData) , result)
     }
 

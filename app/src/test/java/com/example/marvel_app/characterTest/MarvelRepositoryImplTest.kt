@@ -56,7 +56,7 @@ class MarvelRepositoryImplTest {
     private val mockSeriesDao = mock(SeriesDao::class.java)
     private val mockEventDao = mock(EventDao::class.java)
 
-    // System under test
+    
     private lateinit var repository: MarvelRepositoryImpl
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -176,7 +176,7 @@ class MarvelRepositoryImplTest {
 
     @Test
     fun `responseCharacterToEntity converts API response to database entities`() {
-        // Arrange
+
         val marvelCharacterDTO = MarvelCharacterDTO(
             id = 1,
             name = "Iron Man",
@@ -203,7 +203,7 @@ class MarvelRepositoryImplTest {
 
     @Test
     fun `responseCharacterToDomain converts API response to domain models`() {
-        // Arrange
+
         val marvelCharacterDTO = MarvelCharacterDTO(
             id = 1,
             name = "Iron Man",
@@ -222,10 +222,9 @@ class MarvelRepositoryImplTest {
             imageUrl = "image_url/portrait_xlarge.jpg"
         )
 
-        // Act
+
         val result = responseCharacterToDomain(apiResponse)
 
-        // Assert
         assertEquals(listOf(expectedData), result)
     }
 
