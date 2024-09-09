@@ -6,17 +6,17 @@ import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.characterEntityToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.comicEntityToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.eventEntityToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntityComics
-import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntityEvents
-import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntitySeries
-import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.responseCharacterToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.responseCharacterToEntity
-import com.example.marvel_app.data.data_source.local.database.mapper.seriesEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.comicEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.eventEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOentity.responseComicToEntityComics
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOentity.responseEventsToEntityEvents
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOentity.responseSeriesToEntitySeries
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOdomain.responseCharacterToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOentity.responseCharacterToEntity
+import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.seriesEntityToDomain
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 //import com.example.marvel_app.data.mapper.mapToDomainCharacter
-import com.example.marvel_app.data.repository.mapper.mapToDomainCharacterDetails
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOdomain.responseToCharacterDetailsDomain
 import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.domain.model.Marvels_Data
 import com.example.marvel_app.domain.usecase.MarvelRepository_domain
@@ -48,7 +48,7 @@ class MarvelRepositoryImpl(
         term: String?,
     ): List<Character> {
         val characters = characterDao.searchCharactersByName(term) ?: emptyList()
-       Log.d("checking_ts"," ts is : $ts")
+
         if (characters.isNotEmpty()) {
             return characterEntityToDomain(characters)
         } else {
@@ -113,20 +113,20 @@ class MarvelRepositoryImpl(
                     if (comicsResponse.isSuccessful) {
 
                         val comicsData = comicsResponse.body()?.let {
-                            val comicEntities = mapToEntityComics(it, characterId)
+                            val comicEntities = responseComicToEntityComics(it, characterId)
                             comicDao.insertComics(comicEntities)
-                            mapToDomainCharacterDetails(it, characterId)
+                            responseToCharacterDetailsDomain(it, characterId)
                         } ?: emptyList()
                         val seriesData = seriesResponse.body()?.let {
-                            val seriesEntities = mapToEntitySeries(it, characterId)
+                            val seriesEntities = responseSeriesToEntitySeries(it, characterId)
                             seriesDao.insertSeries(seriesEntities)
-                            mapToDomainCharacterDetails(it, characterId)
+                            responseToCharacterDetailsDomain(it, characterId)
                         } ?: emptyList()
                         val eventsData = eventsResponse.body()?.let {
 
-                            val eventEntities = mapToEntityEvents(it, characterId)
+                            val eventEntities = responseEventsToEntityEvents(it, characterId)
                             eventDao.insertEvents(eventEntities)
-                            mapToDomainCharacterDetails(it, characterId)
+                            responseToCharacterDetailsDomain(it, characterId)
                         } ?: emptyList()
 
                         Triple(comicsData, seriesData, eventsData)

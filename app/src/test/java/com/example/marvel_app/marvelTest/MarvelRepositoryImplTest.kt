@@ -8,16 +8,16 @@ import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.entity.ComicEntity
 import com.example.marvel_app.data.data_source.local.entity.EventsEntity
 import com.example.marvel_app.data.data_source.local.entity.SeriesEntity
-import com.example.marvel_app.data.data_source.local.database.mapper.comicEntityToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.eventEntityToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntityComics
-import com.example.marvel_app.data.data_source.local.database.mapper.seriesEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.comicEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.eventEntityToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOentity.responseComicToEntityComics
+import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.seriesEntityToDomain
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.CharacterDetails
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.CharacterDetailsData
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.Character_Details_Data
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.details_thubnail
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
-import com.example.marvel_app.data.repository.mapper.mapToDomainCharacterDetails
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOdomain.responseToCharacterDetailsDomain
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.Marvels_Data
 import junit.framework.TestCase.assertEquals
@@ -218,7 +218,7 @@ class MarvelRepositoryImplTest {
 
             )
 
-        val result = mapToEntityComics(mockCharacterDetails, characterId = 101)
+        val result = responseComicToEntityComics(mockCharacterDetails, characterId = 101)
 
 
         assertEquals(listOf(expectedComicEntity), result)
@@ -250,7 +250,7 @@ class MarvelRepositoryImplTest {
         )
 
 
-        val result = mapToDomainCharacterDetails(mockCharacterDetails, characterId = 101)
+        val result = responseToCharacterDetailsDomain(mockCharacterDetails, characterId = 101)
 
         assertEquals(listOf(expectedData), result)
     }
