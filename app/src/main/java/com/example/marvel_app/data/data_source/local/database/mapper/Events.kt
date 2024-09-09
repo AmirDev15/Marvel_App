@@ -13,7 +13,7 @@ fun mapToEntityEvents(characterDetails: CharacterDetails, characterId: Int): Lis
             title = event.title,
             description = event.description,
             imageUrl = constructImageUrl(event.thumbnail.path, "portrait_xlarge", event.thumbnail.extension),
-            characterId =characterId // Assuming characterId is the same as comic id for this example
+            characterId =characterId
         )
     }
 }

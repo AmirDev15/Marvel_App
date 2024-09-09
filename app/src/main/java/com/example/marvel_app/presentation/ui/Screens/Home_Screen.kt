@@ -60,7 +60,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MarvelHomePage(navController: NavController) {
-    // Move the initialization of categories here
+
     var categories by remember { mutableStateOf(getInitialCategories()) }
 
     Column(
@@ -100,7 +100,7 @@ fun MarvelHomePage(navController: NavController) {
 
         MarvelCategoryGrid(categories)
 
-        // Simulate a title change after 5 seconds
+
         LaunchedEffect(Unit) {
             kotlinx.coroutines.delay(5000)
             categories = categories.map {
@@ -115,7 +115,7 @@ fun MarvelHomePage(navController: NavController) {
 fun ImageSlider() {
 
     val images = listOf(
-        R.drawable.marvel_wallper, // Replace with your actual image resources
+        R.drawable.marvel_wallper,
         R.drawable.wallper_2, R.drawable.wallper3, R.drawable.wallper_5
     )
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
@@ -130,7 +130,7 @@ fun ImageSlider() {
             state = pagerState
         ) { page ->
             Image(
-                painter = painterResource(id = images[page]), // Replace with actual image resources
+                painter = painterResource(id = images[page]),
                 contentDescription = "Slide Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -231,7 +231,7 @@ fun SearchBar(
                         .fillMaxWidth().focusRequester(focusRequester)
                         .clickable(
                             interactionSource = interactionSource,
-                            indication = null  // Removes ripple effect
+                            indication = null
                         ) {
                             if (!enabled) {
 
@@ -257,7 +257,7 @@ fun SearchBar(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 IconButton(onClick = {
-                    // Clear the text and navigate back
+
 
                     if (pop_back_stack) {
                         Log.d("marvel_search", "pop_back_stack is true")
@@ -335,7 +335,7 @@ fun CategoryCard(title: String, imageRes: Int) {
 
 data class Category(val title: String, val imageRes: Int)
 
-// Note: getInitialCategories is not a Composable function
+
 fun getInitialCategories(): List<Category> {
     return listOf(
         Category("Characters", R.drawable.characters),
@@ -347,9 +347,4 @@ fun getInitialCategories(): List<Category> {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MarvelHomePagePreview() {
-//   / MarvelHomePage(navController = NavController(LocalContext.current))
-}
 

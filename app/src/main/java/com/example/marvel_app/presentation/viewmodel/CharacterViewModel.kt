@@ -2,7 +2,7 @@ package com.example.marvel_app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -22,11 +22,11 @@ class CharacterViewModel(
     ) : ViewModel() {
 
 
-    private val _characters = MutableStateFlow<List<CharacterData>>(emptyList())
-    private val _character_for_details = MutableStateFlow<List<CharacterData>>(emptyList())
+    private val _characters = MutableStateFlow<List<Character>>(emptyList())
+    private val _character_for_details = MutableStateFlow<List<Character>>(emptyList())
 
-    val characters: StateFlow<List<CharacterData>> get() = _characters
-    val character_for_details: StateFlow<List<CharacterData>> get() = _character_for_details
+    val characters: StateFlow<List<Character>> get() = _characters
+    val character_for_details: StateFlow<List<Character>> get() = _character_for_details
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
@@ -49,7 +49,6 @@ class CharacterViewModel(
 
                 }
             } catch (e: Exception) {
-//                Log.e("CharacterViewModel", "Error loading characters", e)
             } finally {
                 _isLoading.value = false
                 loading_state.value=false
@@ -68,7 +67,7 @@ class CharacterViewModel(
                 .debounce(300)
                 .distinctUntilChanged()
                 .collect { query ->
-//                    Log.d("CharacterViewModel", "Search query changed: $query")
+
                     loadCharacters(query)
                 }
         }
@@ -76,7 +75,7 @@ class CharacterViewModel(
 
     private var hasStartedQueryObservation = false
     fun onSearchQueryChanged(query: String) {
-//        Log.d("CharacterViewModel", "onSearchQueryChanged called with query: $query")
+
         _searchQuery.value = query
         if (!hasStartedQueryObservation) {
             hasStartedQueryObservation = true

@@ -3,12 +3,12 @@ package com.example.marvel_app.data.data_source.local.database.mapper
 import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
 import com.example.marvel_app.data.mapper.constructImageUrl
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 
 
- fun characterEntityToDomain(characterEntities: List<CharacterEntity>): List<CharacterData> {
+ fun characterEntityToDomain(characterEntities: List<CharacterEntity>): List<Character> {
     return characterEntities.map { entity ->
-        CharacterData(
+        Character(
             id = entity.id,
             name = entity.name,
             description = entity.description,
@@ -28,9 +28,9 @@ import com.example.marvel_app.domain.model.CharacterData
             )
     }
 }
- fun responseCharacterToDomain(characterResponse: CharacterResponseDTO): List<CharacterData> {
+ fun responseCharacterToDomain(characterResponse: CharacterResponseDTO): List<Character> {
     return characterResponse.data.results.map { marvelCharacter ->
-        CharacterData(
+        Character(
             id = marvelCharacter.id,
             name = marvelCharacter.name,
             description = marvelCharacter.description,

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 
@@ -72,12 +72,12 @@ fun MarvelScreen(viewModel: CharacterViewModel, navController: NavController) {
 }
 
 @Composable
-fun CharacterItem(character: CharacterData, navController: NavController) {
+fun CharacterItem(character: Character, navController: NavController) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)
         .clickable {
-            // Navigate to MarvelComicsScreen with character ID
+
             navController.navigate("Comic Screen/${character.id}")
         }
     ) {

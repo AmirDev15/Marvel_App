@@ -11,9 +11,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
-            // Initialize dependencies and get the ViewModels
+
             val (characterViewModel, characterDetailsViewModel) = initializeDependencies(this)
-            // Set the content with the initialized ViewModels
+
             setContent {
                 Navigation(
                     viewModel = characterViewModel,

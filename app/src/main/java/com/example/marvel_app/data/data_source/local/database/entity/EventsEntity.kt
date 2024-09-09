@@ -11,5 +11,5 @@ data class EventsEntity(
     val title: String,
     val description: String?,
     val imageUrl: String,
-    val characterId: Int // Foreign key to CharacterEntity
+    val characterId: Int
 )

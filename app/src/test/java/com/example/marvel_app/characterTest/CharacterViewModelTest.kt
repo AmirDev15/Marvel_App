@@ -1,7 +1,7 @@
 package com.example.marvel_app.characterTest
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 import junit.framework.TestCase.assertEquals
@@ -54,13 +54,13 @@ class CharacterViewModelTest {
     @Test
     fun `loadCharacters updates characters state`() = runTest(testDispatcher) {
         val characterName = "3-d man"
-        val characterData = CharacterData(
+        val character = Character(
             id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
         )
 
         whenever(mockUseCase(limit = 10, offset = 0, term = characterName)).thenReturn(
             listOf(
-                characterData
+                character
             )
         )
 
@@ -70,7 +70,7 @@ class CharacterViewModelTest {
 
         val actualCharacters = viewModel.characters.first()
 
-        assertEquals(listOf(characterData), actualCharacters)
+        assertEquals(listOf(character), actualCharacters)
     }
 
 
@@ -78,12 +78,12 @@ class CharacterViewModelTest {
     fun `onSearchQueryChanged starts search observation`(): Unit = runTest(testDispatcher) {
 
         val characterName = "3-d man"
-        val characterData = CharacterData(
+        val character = Character(
             id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
         )
         `when`(mockUseCase(limit = 10, offset = 0, term = "Iron Man")).thenReturn(
             listOf(
-                characterData
+                character
             )
         )
 
@@ -91,20 +91,20 @@ class CharacterViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(listOf(characterData), viewModel.characters.value)
+        assertEquals(listOf(character), viewModel.characters.value)
         verify(mockUseCase).invoke(10, 0, "Iron Man")
     }
 
     @Test
     fun `isLoading state is set during loading`() = runTest(testDispatcher) {
         val characterName = "Iron Man"
-        val characterData = CharacterData(
+        val character = Character(
             id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
         )
 
         whenever(mockUseCase(limit = 10, offset = 0, term = characterName)).thenReturn(
             listOf(
-                characterData
+                character
             )
         )
 
@@ -123,7 +123,7 @@ class CharacterViewModelTest {
 
         val actualCharacters = viewModel.characters.first()
 
-        assertEquals(listOf(characterData), actualCharacters)
+        assertEquals(listOf(character), actualCharacters)
         assertTrue(isLoadingValues.contains(false))
         assertTrue(isLoadingValues.contains(true))
         job.cancel()

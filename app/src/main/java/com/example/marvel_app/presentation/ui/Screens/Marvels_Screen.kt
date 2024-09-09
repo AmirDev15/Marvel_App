@@ -27,13 +27,13 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.domain.model.Marvels_Data
 import com.example.marvel_app.presentation.viewmodel.Marvels_Screen
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MarvelComicsScreen(
@@ -51,7 +51,6 @@ fun MarvelComicsScreen(
     val Series by View_Model.series.collectAsState(emptyList())
     val Events by View_Model.events.collectAsState(emptyList())
 
-    // Single state for expanded category
     var expandedCategory by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(characterId) {
@@ -84,7 +83,7 @@ fun CollapsedView(
     Comics: List<Marvels_Data>,
     Series: List<Marvels_Data>,
     Events: List<Marvels_Data>,
-    characters: List<CharacterData>,
+    characters: List<Character>,
     navController: NavController,
     isLoading: Boolean,
     View_Model: Marvels_Screen,
@@ -125,14 +124,14 @@ fun CollapsedView(
                     textAlign = TextAlign.Center
                 )
             } else if (characters.isEmpty()) {
-                // Handle the case when no characters are found
+
                 Text(
                     "No Comics found",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
             } else {
-                // Display the list of characters
+
                 CategorySection(
                     title = "Comics",
                     items = Comics,
@@ -148,7 +147,7 @@ fun CollapsedView(
                     textAlign = TextAlign.Center
                 )
             } else if (characters.isEmpty()) {
-                // Handle the case when no characters are found
+
                 Text(
                     "No Series found",
                     modifier = Modifier.fillMaxWidth(),
@@ -171,7 +170,7 @@ fun CollapsedView(
                     textAlign = TextAlign.Center
                 )
             } else if (characters.isEmpty()) {
-                // Handle the case when no characters are found
+
                 Text(
                     "No Events found",
                     modifier = Modifier.fillMaxWidth(),
@@ -190,7 +189,7 @@ fun CollapsedView(
 }
 
 @Composable
-fun CharacterItem(character: CharacterData) {
+fun CharacterItem(character: Character) {
 
     Card(
         modifier = Modifier
@@ -291,13 +290,13 @@ fun CategorySection(
             Button(
                 onClick = onExpandClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White // Set the background color to transparent
+                    containerColor = Color.White
                 ),
-                contentPadding = PaddingValues(0.dp) // Optional: reduce padding for a text-like look
+                contentPadding = PaddingValues(0.dp)
             ) {
                 Text(
                     "View All", color = MaterialTheme.colorScheme.onSurfaceVariant
-                ) // Customize text color if needed
+                )
             }
         }
         LazyRow(

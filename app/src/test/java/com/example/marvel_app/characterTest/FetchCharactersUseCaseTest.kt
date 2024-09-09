@@ -1,6 +1,6 @@
 package com.example.marvel_app.characterTest
 
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.domain.repository.MarvelRepository_domain
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import junit.framework.TestCase.assertEquals
@@ -27,14 +27,14 @@ class FetchCharactersUseCaseTest {
     fun `invoke returns characters from repository`() = runBlocking {
 
         val characterName = "3-d man"
-        val characterData = CharacterData(
+        val character = Character(
             id = 1, name = characterName, description = "Genius billionaire", imageUrl = "image_url"
         )
-        `when`(mockRepository.fetchCharacters(10, 0, characterName)).thenReturn(listOf(characterData))
+        `when`(mockRepository.fetchCharacters(10, 0, characterName)).thenReturn(listOf(character))
 
         val result = useCase(limit = 10, offset = 0, term = characterName)
 
-        assertEquals(listOf(characterData), result)
+        assertEquals(listOf(character), result)
     }
 
     @Test

@@ -17,7 +17,7 @@ object RetrofitClient {
 
     private const val BASE_URL = "https://gateway.marvel.com/"
     public const val PUBLIC_KEY = "0de055665d65a7da0a64fc7e494ed135"
-    private const val PRIVATE_KEY = "9c3de5724690bf008ef09484f4e6cf283b6707b9" // Replace with actual private key
+    private const val PRIVATE_KEY = "9c3de5724690bf008ef09484f4e6cf283b6707b9"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -35,7 +35,7 @@ object RetrofitClient {
             val ts = System.currentTimeMillis().toString()
             val hash = generateHash(ts, PRIVATE_KEY, PUBLIC_KEY)
 
-            // Build the new URL with dynamic query parameters
+
             val url: HttpUrl = originalUrl.newBuilder()
                 .apply {
                     if (!originalUrl.queryParameterNames.contains("ts")) {

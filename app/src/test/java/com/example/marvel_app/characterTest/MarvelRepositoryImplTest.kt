@@ -15,7 +15,7 @@ import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCha
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.ThumbnailDTO
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -92,7 +92,7 @@ class MarvelRepositoryImplTest {
                 )
             )
 
-            val expectedCharacterData = CharacterData(
+            val expectedCharacter = Character(
                 id = 1,
                 name = characterName,
                 description = "Genius billionaire",
@@ -108,7 +108,7 @@ class MarvelRepositoryImplTest {
 
             assertEquals(1, characters.size)
             assertEquals(characterName, characters.first().name)
-            assertEquals(expectedCharacterData,characters.first())
+            assertEquals(expectedCharacter,characters.first())
         }
 
 
@@ -120,7 +120,7 @@ class MarvelRepositoryImplTest {
             description = "Genius billionaire",
             imageUrl = "image_url"
         )
-        val expectedCharacterData = CharacterData(
+        val expectedCharacter = Character(
             id = 1,
             name = "3-d man",
             description = "Genius billionaire",
@@ -129,7 +129,7 @@ class MarvelRepositoryImplTest {
 
         val result = characterEntityToDomain(listOf(characterEntity))
 
-        assertEquals(listOf(expectedCharacterData), result)
+        assertEquals(listOf(expectedCharacter), result)
     }
 
 
@@ -137,7 +137,7 @@ class MarvelRepositoryImplTest {
     fun `test fetchCharacters when data is not in database, fetch from API and map`() =
         runBlocking {
 
-            val characterData = CharacterData(
+            val character = Character(
                 id = 1,
                 name = "Iron Man",
                 description = "Genius billionaire",
@@ -174,7 +174,7 @@ class MarvelRepositoryImplTest {
             val result = repository.fetchCharacters(limit = 10, offset = 0, term = "Iron Man")
 
 
-            assertEquals(listOf(characterData), result)
+            assertEquals(listOf(character), result)
             verify(mockCharacterDao).insertCharacters(anyOrNull())
         }
 
@@ -220,7 +220,7 @@ class MarvelRepositoryImplTest {
                 results = listOf(marvelCharacterDTO)
             )
         )
-        val expectedData = CharacterData(
+        val expectedData = Character(
             id = 1,
             name = "Iron Man",
             description = "Genius billionaire",

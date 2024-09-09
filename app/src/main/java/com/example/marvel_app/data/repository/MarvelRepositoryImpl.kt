@@ -1,5 +1,6 @@
 package com.example.marvel_app.data.repository
 
+import android.util.Log
 import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
@@ -16,7 +17,7 @@ import com.example.marvel_app.data.data_source.local.database.mapper.seriesEntit
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
 //import com.example.marvel_app.data.mapper.mapToDomainCharacter
 import com.example.marvel_app.data.mapper.mapToDomainCharacterDetails
-import com.example.marvel_app.domain.model.CharacterData
+import com.example.marvel_app.domain.model.Character
 import com.example.marvel_app.domain.model.Marvels_Data
 import com.example.marvel_app.domain.repository.MarvelRepository_domain
 import com.example.marvel_app.util.generateHash
@@ -36,6 +37,7 @@ class MarvelRepositoryImpl(
 ) : MarvelRepository_domain {
 
     private val ts = System.currentTimeMillis().toString()
+
     private val privateKey = "9c3de5724690bf008ef09484f4e6cf283b6707b9"
     private val publicKey = "0de055665d65a7da0a64fc7e494ed135"
     private val hash = generateHash(ts, privateKey, publicKey)
@@ -44,9 +46,9 @@ class MarvelRepositoryImpl(
         limit: Int,
         offset: Int,
         term: String?,
-    ): List<CharacterData> {
+    ): List<Character> {
         val characters = characterDao.searchCharactersByName(term) ?: emptyList()
-
+       Log.d("checking_ts"," ts is : $ts")
         if (characters.isNotEmpty()) {
             return characterEntityToDomain(characters)
         } else {
@@ -65,12 +67,12 @@ class MarvelRepositoryImpl(
                     }
                 }
                 fetchedCharacters
-            } catch (e: IOException) {  // This will catch network errors
-                // Handle network error, log it, etc.
-                emptyList()  // Return empty list in case of network failure
-            } catch (e: HttpException) {  // This will catch HTTP errors
-                // Handle HTTP error
-                emptyList()  // Return empty list in case of HTTP failure
+            } catch (e: IOException) {
+
+                emptyList()
+            } catch (e: HttpException) {
+
+                emptyList()
             }
         }
     }

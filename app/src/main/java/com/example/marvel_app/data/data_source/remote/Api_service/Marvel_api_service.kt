@@ -13,9 +13,9 @@ interface Marvel_api_service {
             @Query("limit") limit: Int,
             @Query("offset") offset: Int,
             @Query("name") term: String?,
-            @Query("ts") ts: String , // You should dynamically generate or update this timestamp
+            @Query("ts") ts: String ,
             @Query("apikey") apikey: String ,
-            @Query("hash") hash: String // Calculate this dynamically
+            @Query("hash") hash: String
         ): Response<CharacterResponseDTO>
 
 

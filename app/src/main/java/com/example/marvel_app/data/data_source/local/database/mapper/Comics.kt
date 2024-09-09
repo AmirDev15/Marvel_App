@@ -13,7 +13,7 @@ fun mapToEntityComics(characterDetails: CharacterDetails, characterId:Int): List
             description = comic.description,
             imageUrl = constructImageUrl(comic.thumbnail.path, "portrait_xlarge", comic.thumbnail.extension),
             characterId = characterId
-//            characterId =  responseCharacterToEntity(characterId).first().id // Assuming characterId is the same as comic id for this example
+
         )
     }
 }

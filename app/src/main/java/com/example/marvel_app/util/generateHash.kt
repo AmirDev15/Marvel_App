@@ -3,7 +3,6 @@ package com.example.marvel_app.util
 
 
 import java.security.MessageDigest
-import java.util.*
 
 fun generateHash(ts: String, privateKey: String, publicKey: String): String {
     val input = "$ts$privateKey$publicKey"
