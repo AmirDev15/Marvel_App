@@ -7,8 +7,8 @@ import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.local.entity.CharacterEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.characterEntityToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.responseCharacterToDomain
-import com.example.marvel_app.data.data_source.local.database.mapper.entityTOdomain.responseCharacterToEntity
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOdomain.responseCharacterToDomain
+import com.example.marvel_app.data.data_source.local.database.mapper.responseTOentity.responseCharacterToEntity
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterDataDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.CharacterResponseDTO
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.MarvelCharacterDTO
