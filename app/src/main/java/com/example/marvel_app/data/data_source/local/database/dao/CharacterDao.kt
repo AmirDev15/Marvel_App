@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
+import com.example.marvel_app.data.data_source.local.entity.CharacterEntity
 
 @Dao
 interface CharacterDao {

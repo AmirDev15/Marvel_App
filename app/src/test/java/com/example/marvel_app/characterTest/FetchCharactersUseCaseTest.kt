@@ -1,7 +1,7 @@
 package com.example.marvel_app.characterTest
 
 import com.example.marvel_app.domain.model.Character
-import com.example.marvel_app.domain.repository.MarvelRepository_domain
+import com.example.marvel_app.domain.usecase.MarvelRepository_domain
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue

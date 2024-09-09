@@ -5,9 +5,9 @@ import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
-import com.example.marvel_app.data.data_source.local.database.entity.ComicEntity
-import com.example.marvel_app.data.data_source.local.database.entity.EventsEntity
-import com.example.marvel_app.data.data_source.local.database.entity.SeriesEntity
+import com.example.marvel_app.data.data_source.local.entity.ComicEntity
+import com.example.marvel_app.data.data_source.local.entity.EventsEntity
+import com.example.marvel_app.data.data_source.local.entity.SeriesEntity
 import com.example.marvel_app.data.data_source.local.database.mapper.comicEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.eventEntityToDomain
 import com.example.marvel_app.data.data_source.local.database.mapper.mapToEntityComics
@@ -17,7 +17,7 @@ import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.Character_Details_Data
 import com.example.marvel_app.data.data_source.remote.Api_response_Dto.Response_Data.details_thubnail
 import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
-import com.example.marvel_app.data.mapper.mapToDomainCharacterDetails
+import com.example.marvel_app.data.repository.mapper.mapToDomainCharacterDetails
 import com.example.marvel_app.data.repository.MarvelRepositoryImpl
 import com.example.marvel_app.domain.model.Marvels_Data
 import junit.framework.TestCase.assertEquals

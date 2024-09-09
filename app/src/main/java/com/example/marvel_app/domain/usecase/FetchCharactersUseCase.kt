@@ -2,7 +2,6 @@ package com.example.marvel_app.domain.usecase
 
 
 import com.example.marvel_app.domain.model.Character
-import com.example.marvel_app.domain.repository.MarvelRepository_domain
 import java.lang.RuntimeException
 
 

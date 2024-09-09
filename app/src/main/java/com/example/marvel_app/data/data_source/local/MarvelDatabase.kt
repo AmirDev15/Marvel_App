@@ -7,10 +7,10 @@ import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
-import com.example.marvel_app.data.data_source.local.database.entity.CharacterEntity
-import com.example.marvel_app.data.data_source.local.database.entity.ComicEntity
-import com.example.marvel_app.data.data_source.local.database.entity.EventsEntity
-import com.example.marvel_app.data.data_source.local.database.entity.SeriesEntity
+import com.example.marvel_app.data.data_source.local.entity.CharacterEntity
+import com.example.marvel_app.data.data_source.local.entity.ComicEntity
+import com.example.marvel_app.data.data_source.local.entity.EventsEntity
+import com.example.marvel_app.data.data_source.local.entity.SeriesEntity
 
 
 @Database(

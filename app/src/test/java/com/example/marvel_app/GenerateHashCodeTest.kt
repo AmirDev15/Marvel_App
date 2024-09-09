@@ -1,6 +1,6 @@
 package com.example.marvel_app
 
-import com.example.marvel_app.util.generateHash
+import com.example.marvel_app.data.framework.util.generateHash
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.marvel_app.presentation.navigation.Navigation
-import com.example.marvel_app.util.initializeDependencies
+import com.example.marvel_app.presentation.ui.navigation.Navigation
+import com.example.marvel_app.data.framework.database.initializeDependencies
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
