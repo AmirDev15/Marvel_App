@@ -28,13 +28,13 @@ android {
         }
 
 
-        // Define a variable for properties
+
         val properties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
 
         if (localPropertiesFile.exists()) {
             properties.load(FileInputStream(localPropertiesFile))
-            // Adding ARC_API_KEY and PRIVATE_KEY to BuildConfig
+
             buildConfigField(
                 "String",
                 "PUBLIC_API_KEY",
