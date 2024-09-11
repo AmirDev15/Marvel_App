@@ -1,7 +1,7 @@
 package com.example.marvel_app.characterTest
 
-import com.example.marvel_app.domain.model.Character
-import com.example.marvel_app.domain.usecase.MarvelRepository_domain
+import com.example.marvel_app.domain.entity.Character
+import com.example.marvel_app.domain.usecase.RepositoryDomain
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -14,7 +14,7 @@ import org.mockito.Mockito.`when`
 // Use case test
 class FetchCharactersUseCaseTest {
 
-    private lateinit var mockRepository: MarvelRepository_domain
+    private lateinit var mockRepository: RepositoryDomain
     private lateinit var useCase: FetchCharactersUseCase
 
     @Before
