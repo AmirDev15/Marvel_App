@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -23,6 +26,30 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+
+        // Define a variable for properties
+        val properties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        if (localPropertiesFile.exists()) {
+            properties.load(FileInputStream(localPropertiesFile))
+            // Adding ARC_API_KEY and PRIVATE_KEY to BuildConfig
+            buildConfigField(
+                "String",
+                "PUBLIC_API_KEY",
+                "\"${properties.getProperty("PUBLIC_API_KEY")}\""
+            )
+            buildConfigField(
+                "String",
+                "PRIVATE_KEY",
+                "\"${properties.getProperty("PRIVATE_KEY")}\""
+            )
+        } else {
+            buildConfigField("String", "PUBLIC_API_KEY", "\"\"")
+            buildConfigField("String", "PRIVATE_KEY", "\"\"")
+        }
+
     }
 
     buildTypes {
@@ -43,6 +70,8 @@ android {
     }
     buildFeatures {
         compose = true
+
+        buildConfig=true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -116,26 +145,25 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:3.3.0")
 
 
-
     // JUnit for unit testing
-    testImplementation ("junit:junit:4.13.2")
+    testImplementation("junit:junit:4.13.2")
 
     // Mockito for mocking
-    testImplementation ("org.mockito:mockito-core:4.11.0")
+    testImplementation("org.mockito:mockito-core:4.11.0")
 
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
 
-    testImplementation ("io.mockk:mockk:1.12.0")
-    testImplementation ("androidx.arch.core:core-testing:2.1.0")
-    testImplementation ("app.cash.turbine:turbine:0.7.0")
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("app.cash.turbine:turbine:0.7.0")
     // For Kotlin coroutine testing
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
 
 
     //navigations
 
-    testImplementation ("org.mockito:mockito-inline:4.8.1") // use the latest version
+    testImplementation("org.mockito:mockito-inline:4.8.1") // use the latest version
 
     implementation("androidx.navigation:navigation-compose:2.7.2") // Use the latest version
 

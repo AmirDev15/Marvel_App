@@ -1,7 +1,7 @@
 package com.example.marvel_app.data.framework.network
 
 import android.util.Log
-import com.example.marvel_app.data.data_source.remote.Api_service.Marvel_api_service
+import com.example.marvel_app.data.data_source.remote.ApiService.MarvelApiService
 import com.example.marvel_app.data.framework.util.generateHash
 
 import okhttp3.OkHttpClient
@@ -65,7 +65,7 @@ object RetrofitClient {
         .client(client)
         .build()
 
-    val apiService: Marvel_api_service = retrofit.create(Marvel_api_service::class.java)
+    val apiService: MarvelApiService = retrofit.create(MarvelApiService::class.java)
 }
 
 
