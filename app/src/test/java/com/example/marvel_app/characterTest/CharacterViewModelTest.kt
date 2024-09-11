@@ -1,7 +1,7 @@
 package com.example.marvel_app.characterTest
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.marvel_app.domain.model.Character
+import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 import junit.framework.TestCase.assertEquals
