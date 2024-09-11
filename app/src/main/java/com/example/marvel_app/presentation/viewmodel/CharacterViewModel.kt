@@ -2,7 +2,7 @@ package com.example.marvel_app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marvel_app.domain.model.Character
+import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ class CharacterViewModel(
     private val _character_for_details = MutableStateFlow<List<Character>>(emptyList())
 
     val characters: StateFlow<List<Character>> get() = _characters
-    val character_for_details: StateFlow<List<Character>> get() = _character_for_details
+    val characterForDetails: StateFlow<List<Character>> get() = _character_for_details
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
@@ -34,7 +34,9 @@ class CharacterViewModel(
 
     val _searchQuery = MutableStateFlow("")
 
-    var loading_state =  MutableStateFlow(false)
+
+    private val loading = MutableStateFlow(false)
+    val loadingState : StateFlow<Boolean> get() =loading
 
     private fun loadCharacters(query: String) {
         viewModelScope.launch(ioDispatcher) {
@@ -43,15 +45,16 @@ class CharacterViewModel(
                     val fetchedCharacters =
                         getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
                     _isLoading.value = true
+                    loading.value = true
                     _characters.value = fetchedCharacters
                     _character_for_details.value = fetchedCharacters
-                    loading_state.value = true
+
 
                 }
             } catch (e: Exception) {
             } finally {
                 _isLoading.value = false
-                loading_state.value=false
+                loading.value=false
 
 
             }

@@ -5,14 +5,14 @@ import android.content.Context
 import androidx.room.Room
 import com.example.marvel_app.data.data_source.local.MarvelDatabase
 import com.example.marvel_app.data.framework.network.RetrofitClient
-import com.example.marvel_app.data.repository.MarvelRepositoryImpl
+import com.example.marvel_app.data.repository.RepositoryImpl
 import com.example.marvel_app.domain.usecase.FetchCharacterDetailsUseCase
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
-import com.example.marvel_app.presentation.viewmodel.Marvels_Screen
+import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
 
 
-fun initializeDependencies(context: Context): Pair<CharacterViewModel, Marvels_Screen> {
+fun initializeDependencies(context: Context): Pair<CharacterViewModel, CharacterDetailsViewModel> {
 
     val db = Room.databaseBuilder(
         context.applicationContext, MarvelDatabase::class.java, "MarvelDatabase"
@@ -26,7 +26,7 @@ fun initializeDependencies(context: Context): Pair<CharacterViewModel, Marvels_S
 
     val apiService = RetrofitClient.apiService
 
-    val repository = MarvelRepositoryImpl(
+    val repository = RepositoryImpl(
         apiService = apiService,
         characterDao = characterDao,
         comicDao = comicDao,
@@ -40,7 +40,7 @@ fun initializeDependencies(context: Context): Pair<CharacterViewModel, Marvels_S
     val FetchCharacterDetailsUseCase = FetchCharacterDetailsUseCase(repository)
 
     val characterViewModel = CharacterViewModel(fetchCharactersUseCase)
-    val marvelsScreen = Marvels_Screen(FetchCharacterDetailsUseCase)
+    val marvelsScreen = CharacterDetailsViewModel(FetchCharacterDetailsUseCase)
 
     return Pair(characterViewModel, marvelsScreen)
 }

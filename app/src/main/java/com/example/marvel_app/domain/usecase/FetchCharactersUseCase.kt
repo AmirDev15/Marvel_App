@@ -1,11 +1,11 @@
 package com.example.marvel_app.domain.usecase
 
 
-import com.example.marvel_app.domain.model.Character
+import com.example.marvel_app.domain.entity.Character
 import java.lang.RuntimeException
 
 
-class FetchCharactersUseCase(private val repository: MarvelRepository_domain) {
+class FetchCharactersUseCase(private val repository: RepositoryDomain) {
 
     suspend operator fun invoke(limit: Int, offset: Int, term: String?): List<Character> {
 

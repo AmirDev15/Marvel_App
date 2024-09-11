@@ -1,11 +1,11 @@
 package com.example.marvel_app.domain.usecase
 
-import com.example.marvel_app.domain.model.Marvels_Data
+import com.example.marvel_app.domain.entity.CharacterDetailItem
 
-class FetchCharacterDetailsUseCase(private val repository: MarvelRepository_domain) {
-    suspend fun execute(characterId: Int): Triple<List<Marvels_Data>, List<Marvels_Data>, List<Marvels_Data>> {
+class FetchCharacterDetailsUseCase(private val repository: RepositoryDomain) {
+    suspend fun execute(characterId: Int): Triple<List<CharacterDetailItem>, List<CharacterDetailItem>, List<CharacterDetailItem>> {
         return try {
-            repository.fetchComicsAndSeries(characterId)
+            repository.fetchCharacterDetails(characterId)
         } catch (e: RuntimeException) {
             Triple(emptyList(), emptyList(), emptyList())
         }

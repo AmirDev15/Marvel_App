@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
             setContent {
                 Navigation(
                     viewModel = characterViewModel,
-                    Marvels_Screen = characterDetailsViewModel
+                    CharacterDetailsViewModel = characterDetailsViewModel
                 )
             }
         } catch (e: Exception) {

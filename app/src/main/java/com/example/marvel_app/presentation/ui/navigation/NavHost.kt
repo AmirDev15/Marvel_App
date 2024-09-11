@@ -4,15 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.marvel_app.presentation.ui.Screens.MarvelComicsScreen
+import com.example.marvel_app.presentation.ui.Screens.CharacterDetailsScreen
 import com.example.marvel_app.presentation.ui.Screens.MarvelHomePage
-import com.example.marvel_app.presentation.ui.Screens.MarvelScreen
-import com.example.marvel_app.presentation.viewmodel.Marvels_Screen
+import com.example.marvel_app.presentation.ui.Screens.Search
+import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 
 @Composable
-fun Navigation(viewModel: CharacterViewModel, Marvels_Screen: Marvels_Screen) {
+fun Navigation(viewModel: CharacterViewModel, CharacterDetailsViewModel: CharacterDetailsViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "Home Screen") {
@@ -20,11 +20,11 @@ fun Navigation(viewModel: CharacterViewModel, Marvels_Screen: Marvels_Screen) {
             MarvelHomePage(navController = navController)
         }
         composable("Search Screen") {
-            MarvelScreen(viewModel = viewModel, navController = navController)
+            Search(viewModel = viewModel, navController = navController)
         }
         composable("Comic Screen/{characterId}") { backStackEntry ->
             val characterId = backStackEntry.arguments?.getString("characterId")?.toInt() ?: 0
-            MarvelComicsScreen(characterId = characterId, View_Model = Marvels_Screen,viewModel = viewModel,navController = navController)
+            CharacterDetailsScreen(characterId = characterId, viewmodel = CharacterDetailsViewModel,viewModel = viewModel,navController = navController)
         }
 
     }
