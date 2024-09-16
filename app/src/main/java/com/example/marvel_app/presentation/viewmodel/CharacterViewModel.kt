@@ -1,5 +1,6 @@
 package com.example.marvel_app.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvel_app.domain.entity.Character
@@ -35,10 +36,13 @@ class CharacterViewModel(
     val _searchQuery = MutableStateFlow("")
 
 
+
     private val loading = MutableStateFlow(false)
     val loadingState : StateFlow<Boolean> get() =loading
 
     private fun loadCharacters(query: String) {
+        Log.d("CharacterViewModel", "loading: ${loading.value}")
+        Log.d("CharacterViewModel", "loadingState: ${loadingState.value}")
         viewModelScope.launch(ioDispatcher) {
             try {
                 if (query.isNotEmpty()) {
@@ -46,15 +50,21 @@ class CharacterViewModel(
                         getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
                     _isLoading.value = true
                     loading.value = true
+                    Log.d("CharacterViewModel", "loading: ${loading.value}")
+                    Log.d("CharacterViewModel", "loadingState: ${loadingState.value}")
                     _characters.value = fetchedCharacters
                     _character_for_details.value = fetchedCharacters
 
 
+                }else{
+                    loading.value = false
                 }
             } catch (e: Exception) {
             } finally {
                 _isLoading.value = false
-                loading.value=false
+                loading.value = false
+                Log.d("CharacterViewModel", "loading: ${loading.value}")
+                Log.d("CharacterViewModel", "loadingState: ${loadingState.value}")
 
 
             }

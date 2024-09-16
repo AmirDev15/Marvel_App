@@ -7,6 +7,7 @@ interface RepositoryDomain {
     suspend fun fetchCharacters(limit: Int, offset: Int, term: String?): List<Character>
 
     suspend fun fetchCharacterDetails(characterId: Int): Triple<List<CharacterDetailItem>, List<CharacterDetailItem>, List<CharacterDetailItem>>
+    abstract fun NoInternetException(s: String): Throwable
 
 
 }

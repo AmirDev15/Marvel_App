@@ -1,26 +1,28 @@
 package com.example.marvel_app.data.repository
 
+//import com.example.marvel_app.data.mapper.mapToDomainCharacter
+import android.util.Log
 import com.example.marvel_app.BuildConfig
 import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
 import com.example.marvel_app.data.data_source.local.database.dao.EventDao
 import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
+import com.example.marvel_app.data.data_source.remote.ApiService.MarvelApiService
+import com.example.marvel_app.data.data_source.remote.mapper.responseTOdomain.responseCharacterToDomain
+import com.example.marvel_app.data.data_source.remote.mapper.responseTOdomain.responseToCharacterDetailsDomain
+import com.example.marvel_app.data.framework.util.checkIfOnline
+import com.example.marvel_app.data.framework.util.generateHash
 import com.example.marvel_app.data.repository.mapper.entityTOdomain.characterEntityToDomain
 import com.example.marvel_app.data.repository.mapper.entityTOdomain.comicEntityToDomain
 import com.example.marvel_app.data.repository.mapper.entityTOdomain.eventEntityToDomain
+import com.example.marvel_app.data.repository.mapper.entityTOdomain.seriesEntityToDomain
+import com.example.marvel_app.data.repository.mapper.responseTOentity.responseCharacterToEntity
 import com.example.marvel_app.data.repository.mapper.responseTOentity.responseComicToEntityComics
 import com.example.marvel_app.data.repository.mapper.responseTOentity.responseEventsToEntityEvents
 import com.example.marvel_app.data.repository.mapper.responseTOentity.responseSeriesToEntitySeries
-import com.example.marvel_app.data.data_source.remote.mapper.responseTOdomain.responseCharacterToDomain
-import com.example.marvel_app.data.repository.mapper.responseTOentity.responseCharacterToEntity
-import com.example.marvel_app.data.repository.mapper.entityTOdomain.seriesEntityToDomain
-import com.example.marvel_app.data.data_source.remote.ApiService.MarvelApiService
-//import com.example.marvel_app.data.mapper.mapToDomainCharacter
-import com.example.marvel_app.data.data_source.remote.mapper.responseTOdomain.responseToCharacterDetailsDomain
 import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.entity.CharacterDetailItem
 import com.example.marvel_app.domain.usecase.RepositoryDomain
-import com.example.marvel_app.data.framework.util.generateHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -34,6 +36,7 @@ class RepositoryImpl(
     private val comicDao: ComicDao,
     private val seriesDao: SeriesDao,
     private val eventDao: EventDao,
+    private val context: android.content.Context
 ) : RepositoryDomain {
 
     private val ts = System.currentTimeMillis().toString()
@@ -51,8 +54,13 @@ class RepositoryImpl(
 
         if (characters.isNotEmpty()) {
             return characterEntityToDomain(characters)
+        } else if (!checkIfOnline(context)) {
+            Log.d("RepositoryImpl", "No internet connection detected.")
+            throw NoInternetException("No internet connection. Please check your connection.")
         } else {
+
             return try {
+
                 val fetchedCharacters = withContext(Dispatchers.IO) {
                     val response =
                         apiService.getCharacters(limit, offset, term, ts, publicKey, hash)
@@ -67,12 +75,14 @@ class RepositoryImpl(
                         } ?: emptyList()
                     }
                 }
-                fetchedCharacters
-            } catch (e: IOException) {
 
+                fetchedCharacters
+
+            } catch (e: IOException) {
+                Log.e("RepositoryImpl", "Error fetching characters", e)
                 emptyList()
             } catch (e: HttpException) {
-
+                Log.e("RepositoryImpl", "Error fetching characters", e)
                 emptyList()
             }
         }
@@ -142,6 +152,11 @@ class RepositoryImpl(
         } catch (_: Exception) {
         }
         return Triple(emptyList(), emptyList(), emptyList())
+
+    }
+
+    override fun NoInternetException(s: String): Throwable {
+        TODO("Not yet implemented")
 
     }
 

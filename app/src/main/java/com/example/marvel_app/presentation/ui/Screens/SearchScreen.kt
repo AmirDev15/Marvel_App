@@ -1,6 +1,7 @@
 package com.example.marvel_app.presentation.ui.Screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +27,8 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
 
     val characters by viewModel.characters.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
+    Log.d("CharacterViewModel", "characters: $characters")
+    Log.d("CharacterViewModel", "loading view: $loadingState")
 
     Scaffold(topBar = {
         TopAppBar(title = { Text("Marvel Characters") })
@@ -52,14 +56,19 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-            } else if (characters.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            else if (characters.isEmpty()) {
 
                 Text(
                     "No characters found",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-            } else {
+            }
+            else {
 
                 LazyColumn {
                     items(characters) { character ->

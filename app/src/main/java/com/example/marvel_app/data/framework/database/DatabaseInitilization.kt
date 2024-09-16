@@ -32,6 +32,7 @@ fun initializeDependencies(context: Context): Pair<CharacterViewModel, Character
         comicDao = comicDao,
         seriesDao = seriesDao,
         eventDao = eventDao,
+        context = context
 
     )
 

@@ -3,6 +3,7 @@ package com.example.marvel_app.presentation.ui.Screens
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,7 +32,6 @@ import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.entity.CharacterDetailItem
 import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
-
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -112,6 +112,7 @@ fun CollapsedView(
 
         items(characters) { character ->
             CharacterItem(character)
+
         }
 
         item {
@@ -122,6 +123,8 @@ fun CollapsedView(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
+
+
             } else if (characters.isEmpty()) {
 
                 Text(
@@ -163,24 +166,33 @@ fun CollapsedView(
         }
         item {
             if (isLoading) {
-                Text(
-                    "Loading Events...",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
+                Box(modifier = Modifier.height(300.dp), contentAlignment = Alignment.Center) {
+                    Text(
+                        "Loading Events...",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                    CircularProgressIndicator()
+                }
+
             } else if (characters.isEmpty()) {
+
 
                 Text(
                     "No Events found",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     textAlign = TextAlign.Center
+
                 )
+
+
             } else {
                 CategorySection(
                     title = "Events",
                     items = Events,
                     onExpandClick = { onExpandCategory("Events") })
             }
+
 
         }
 
