@@ -11,8 +11,12 @@ import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 
+
 @Composable
-fun Navigation(viewModel: CharacterViewModel, CharacterDetailsViewModel: CharacterDetailsViewModel) {
+fun Navigation(
+    viewModel: CharacterViewModel,
+    CharacterDetailsViewModel: CharacterDetailsViewModel,
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "Home Screen") {
@@ -24,7 +28,13 @@ fun Navigation(viewModel: CharacterViewModel, CharacterDetailsViewModel: Charact
         }
         composable("Comic Screen/{characterId}") { backStackEntry ->
             val characterId = backStackEntry.arguments?.getString("characterId")?.toInt() ?: 0
-            CharacterDetailsScreen(characterId = characterId, viewmodel = CharacterDetailsViewModel,viewModel = viewModel,navController = navController)
+            CharacterDetailsScreen(
+                characterId = characterId,
+                viewmodel = CharacterDetailsViewModel,
+                viewModel = viewModel,
+                navController = navController,
+
+            )
         }
 
     }

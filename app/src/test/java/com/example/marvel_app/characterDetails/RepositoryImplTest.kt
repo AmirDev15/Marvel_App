@@ -56,12 +56,13 @@ class RepositoryImplTest {
     private val mockComicDao: ComicDao = mock()
     private val mockSeriesDao: SeriesDao = mock()
     private val mockEventDao: EventDao = mock()
+    private val context: android.content.Context = mock()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = RepositoryImpl(
-            mockApiService, mockCharacterDao, mockComicDao, mockSeriesDao, mockEventDao
+            mockApiService, mockCharacterDao, mockComicDao, mockSeriesDao, mockEventDao, context
         )
     }
 

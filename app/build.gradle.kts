@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.junit.junit)
     implementation(libs.engage.core)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

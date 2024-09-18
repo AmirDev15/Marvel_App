@@ -12,9 +12,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.marvel_app.data.framework.util.NetworkStateMessage
+import com.example.marvel_app.data.framework.util.checkIfOnline
 import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
@@ -24,15 +27,22 @@ import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 @Composable
 fun Search(viewModel: CharacterViewModel, navController: NavController) {
-
+    val context = LocalContext.current
     val characters by viewModel.characters.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
     Log.d("CharacterViewModel", "characters: $characters")
     Log.d("CharacterViewModel", "loading view: $loadingState")
 
+
+
+
+
+
     Scaffold(topBar = {
         TopAppBar(title = { Text("Marvel Characters") })
     }) {
+
+
         Column(
             modifier = Modifier
                 .padding(top = 65.dp)
@@ -50,7 +60,12 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            if (!checkIfOnline(context)) {
+                Log.d("RepositoryImpl", "No internet connection")
+                NetworkStateMessage(context)
+            }
             if (loadingState) {
+
                 Text(
                     "Loading character...",
                     modifier = Modifier.fillMaxWidth(),
@@ -59,16 +74,14 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
-            }
-            else if (characters.isEmpty()) {
+            } else if (characters.isEmpty()) {
 
                 Text(
                     "No characters found",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-            }
-            else {
+            } else {
 
                 LazyColumn {
                     items(characters) { character ->

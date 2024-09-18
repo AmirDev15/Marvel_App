@@ -29,7 +29,10 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
-
+sealed class FetchResult<out T> {
+    data class Success<out T>(val data: T) : FetchResult<T>()
+    data class Error(val message: String) : FetchResult<Nothing>()
+}
 class RepositoryImpl(
     private val apiService: MarvelApiService,
     private val characterDao: CharacterDao,
@@ -49,15 +52,19 @@ class RepositoryImpl(
         limit: Int,
         offset: Int,
         term: String?,
-    ): List<Character> {
+    ):FetchResult<List<Character>> {
         val characters = characterDao.searchCharactersByName(term) ?: emptyList()
 
         if (characters.isNotEmpty()) {
-            return characterEntityToDomain(characters)
-        } else if (!checkIfOnline(context)) {
+            return FetchResult.Success(characterEntityToDomain(characters))
+        }
+
+        else if (!checkIfOnline(context)) {
             Log.d("RepositoryImpl", "No internet connection detected.")
-            throw NoInternetException("No internet connection. Please check your connection.")
-        } else {
+            return FetchResult.Error("No internet connection")
+
+        }
+        else {
 
             return try {
 
@@ -66,7 +73,7 @@ class RepositoryImpl(
                         apiService.getCharacters(limit, offset, term, ts, publicKey, hash)
 
                     if (response.body()?.data?.results.isNullOrEmpty()) {
-                        emptyList()
+                        emptyList<Character>()
                     } else {
                         response.body()?.let {
                             val characterEntities = responseCharacterToEntity(it)
@@ -75,15 +82,11 @@ class RepositoryImpl(
                         } ?: emptyList()
                     }
                 }
-
-                fetchedCharacters
-
+                FetchResult.Success(fetchedCharacters)
             } catch (e: IOException) {
-                Log.e("RepositoryImpl", "Error fetching characters", e)
-                emptyList()
+                FetchResult.Error("Network error: Unable to load characters")
             } catch (e: HttpException) {
-                Log.e("RepositoryImpl", "Error fetching characters", e)
-                emptyList()
+                FetchResult.Error("HTTP error: Unable to load characters")
             }
         }
     }
@@ -157,8 +160,8 @@ class RepositoryImpl(
 
     override fun NoInternetException(s: String): Throwable {
         TODO("Not yet implemented")
-
     }
+
 
 
 }
