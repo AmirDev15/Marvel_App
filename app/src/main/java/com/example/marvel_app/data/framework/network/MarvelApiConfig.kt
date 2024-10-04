@@ -1,6 +1,7 @@
 package com.example.marvel_app.data.framework.network
 
 import android.util.Log
+import com.example.marvel_app.BuildConfig
 import com.example.marvel_app.data.data_source.remote.ApiService.MarvelApiService
 import com.example.marvel_app.data.framework.util.generateHash
 
@@ -10,13 +11,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.crypto.Cipher.PUBLIC_KEY
 
 
 object RetrofitClient {
 
     private const val BASE_URL = "https://gateway.marvel.com/"
-    public const val PUBLIC_KEY = "0de055665d65a7da0a64fc7e494ed135"
-    private const val PRIVATE_KEY = "9c3de5724690bf008ef09484f4e6cf283b6707b9"
+
+
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -30,9 +32,11 @@ object RetrofitClient {
             val originalRequest = chain.request()
             val originalUrl = originalRequest.url
 
-            // Dynamically generate ts and hash
+
             val ts = System.currentTimeMillis().toString()
-            val hash = generateHash(ts, PRIVATE_KEY, PUBLIC_KEY)
+            val publicKey = BuildConfig.PUBLIC_API_KEY
+            val privateKey = BuildConfig.PRIVATE_KEY
+            val hash = generateHash(ts, privateKey, publicKey)
 
 
             val url: HttpUrl = originalUrl.newBuilder()
@@ -41,7 +45,7 @@ object RetrofitClient {
                         addQueryParameter("ts", ts)
                     }
                     if (!originalUrl.queryParameterNames.contains("apikey")) {
-                        addQueryParameter("apikey", PUBLIC_KEY)
+                        addQueryParameter("apikey", publicKey)
                     }
                     if (!originalUrl.queryParameterNames.contains("hash")) {
                         addQueryParameter("hash", hash)

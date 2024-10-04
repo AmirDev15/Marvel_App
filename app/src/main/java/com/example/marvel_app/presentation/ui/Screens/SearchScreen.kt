@@ -30,6 +30,8 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
     val context = LocalContext.current
     val characters by viewModel.characters.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
     Log.d("CharacterViewModel", "characters: $characters")
     Log.d("CharacterViewModel", "loading view: $loadingState")
 
@@ -59,11 +61,33 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+//            Box(modifier = Modifier.fillMaxSize()) {
+//                // Place SnackbarHost at the top of the screen
+//                SnackbarHost(
+//                    hostState = snackbarHostState,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .align(Alignment.TopCenter)
+//                )
+//            }
+            errorMessage?.let {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Snackbar(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    action = {
+                        Button(onClick = { /* Dismiss or Retry Action */ }) {
+                            Text("Retry")
+                        }
+                    }
+                ) {
+                    Text(it)
+                }
+            }}
 
-            if (!checkIfOnline(context)) {
-                Log.d("RepositoryImpl", "No internet connection")
-                NetworkStateMessage(context)
-            }
+//            if (!checkIfOnline(context)) {
+//                Log.d("RepositoryImpl", "No internet connection")
+//                NetworkStateMessage(context)
+//            }
             if (loadingState) {
 
                 Text(

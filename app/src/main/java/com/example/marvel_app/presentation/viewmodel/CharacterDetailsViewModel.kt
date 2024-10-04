@@ -1,5 +1,6 @@
 package com.example.marvel_app.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvel_app.domain.entity.CharacterDetailItem
@@ -37,9 +38,13 @@ class CharacterDetailsViewModel(
             _events.value = emptyList()
             try {
                 val (comics, series, events) = fetchComicsAndSeriesUseCase.execute(characterId)
+                Log.d("CharacterViewModel", "id of character is : $characterId")
                 _comics.value = comics
                 _series.value = (series)
                 _events.value = (events)
+                Log.d("CharacterViewModel", "comics: $comics")
+                Log.d("CharacterViewModel", "series: $series")
+                Log.d("CharacterViewModel", "events: $events")
             } catch (_: RuntimeException) {
             } finally {
                 _isLoading.value = false

@@ -1,7 +1,5 @@
 package com.example.marvel_app.data.repository
 
-//import com.example.marvel_app.data.mapper.mapToDomainCharacter
-import android.util.Log
 import com.example.marvel_app.BuildConfig
 import com.example.marvel_app.data.data_source.local.database.dao.CharacterDao
 import com.example.marvel_app.data.data_source.local.database.dao.ComicDao
@@ -10,7 +8,6 @@ import com.example.marvel_app.data.data_source.local.database.dao.SeriesDao
 import com.example.marvel_app.data.data_source.remote.ApiService.MarvelApiService
 import com.example.marvel_app.data.data_source.remote.mapper.responseTOdomain.responseCharacterToDomain
 import com.example.marvel_app.data.data_source.remote.mapper.responseTOdomain.responseToCharacterDetailsDomain
-import com.example.marvel_app.data.framework.util.checkIfOnline
 import com.example.marvel_app.data.framework.util.generateHash
 import com.example.marvel_app.data.repository.mapper.entityTOdomain.characterEntityToDomain
 import com.example.marvel_app.data.repository.mapper.entityTOdomain.comicEntityToDomain
@@ -29,17 +26,12 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed class FetchResult<out T> {
-    data class Success<out T>(val data: T) : FetchResult<T>()
-    data class Error(val message: String) : FetchResult<Nothing>()
-}
 class RepositoryImpl(
     private val apiService: MarvelApiService,
     private val characterDao: CharacterDao,
     private val comicDao: ComicDao,
     private val seriesDao: SeriesDao,
     private val eventDao: EventDao,
-    private val context: android.content.Context
 ) : RepositoryDomain {
 
     private val ts = System.currentTimeMillis().toString()
@@ -52,28 +44,19 @@ class RepositoryImpl(
         limit: Int,
         offset: Int,
         term: String?,
-    ):FetchResult<List<Character>> {
+    ): List<Character> {
         val characters = characterDao.searchCharactersByName(term) ?: emptyList()
 
         if (characters.isNotEmpty()) {
-            return FetchResult.Success(characterEntityToDomain(characters))
-        }
-
-        else if (!checkIfOnline(context)) {
-            Log.d("RepositoryImpl", "No internet connection detected.")
-            return FetchResult.Error("No internet connection")
-
-        }
-        else {
-
+            return characterEntityToDomain(characters)
+        } else {
             return try {
-
                 val fetchedCharacters = withContext(Dispatchers.IO) {
                     val response =
                         apiService.getCharacters(limit, offset, term, ts, publicKey, hash)
 
                     if (response.body()?.data?.results.isNullOrEmpty()) {
-                        emptyList<Character>()
+                        emptyList()
                     } else {
                         response.body()?.let {
                             val characterEntities = responseCharacterToEntity(it)
@@ -82,11 +65,13 @@ class RepositoryImpl(
                         } ?: emptyList()
                     }
                 }
-                FetchResult.Success(fetchedCharacters)
+                fetchedCharacters
             } catch (e: IOException) {
-                FetchResult.Error("Network error: Unable to load characters")
+
+                emptyList()
             } catch (e: HttpException) {
-                FetchResult.Error("HTTP error: Unable to load characters")
+
+                emptyList()
             }
         }
     }
@@ -157,11 +142,6 @@ class RepositoryImpl(
         return Triple(emptyList(), emptyList(), emptyList())
 
     }
-
-    override fun NoInternetException(s: String): Throwable {
-        TODO("Not yet implemented")
-    }
-
 
 
 }

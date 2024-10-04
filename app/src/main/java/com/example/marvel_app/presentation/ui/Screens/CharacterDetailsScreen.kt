@@ -78,6 +78,10 @@ fun CharacterDetailsScreen(
     val series by viewmodel.series.collectAsState(emptyList())
     val events by viewmodel.events.collectAsState(emptyList())
 
+    Log.d("CharacterViewModel", "comics: $comics")
+    Log.d("CharacterViewModel", "series: $series")
+    Log.d("CharacterViewModel", "events: $events")
+
 
 
     var expandedCategory by remember { mutableStateOf<String?>(null) }
@@ -156,14 +160,16 @@ fun CollapsedView(
                 )
 
 
-            } else if (characters.isEmpty()) {
+            }
+            else if (characters.isEmpty()) {
 
                 Text(
                     "No Comics found",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-            } else {
+            }
+            else {
 
                 CategorySection(
                     title = "Comics",

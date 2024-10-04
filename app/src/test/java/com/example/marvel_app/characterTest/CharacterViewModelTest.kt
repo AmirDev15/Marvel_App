@@ -59,6 +59,7 @@ class CharacterViewModelTest {
         )
 
         whenever(mockUseCase(limit = 10, offset = 0, term = characterName)).thenReturn(
+
             listOf(
                 character
             )

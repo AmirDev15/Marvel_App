@@ -1,6 +1,5 @@
 package com.example.marvel_app.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvel_app.domain.entity.Character
@@ -32,39 +31,37 @@ class CharacterViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-
+    var loading_state =  MutableStateFlow(false)
     val _searchQuery = MutableStateFlow("")
 
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> get() = _errorMessage
 
     private val loading = MutableStateFlow(false)
-    val loadingState : StateFlow<Boolean> get() =loading
+    val loadingState: StateFlow<Boolean> get() = loading
 
     private fun loadCharacters(query: String) {
-        Log.d("CharacterViewModel", "loading: ${loading.value}")
-        Log.d("CharacterViewModel", "loadingState: ${loadingState.value}")
         viewModelScope.launch(ioDispatcher) {
+            _isLoading.value = true
+//            Log.d("CharacterViewModel", "Loading characters with query: $query")
             try {
                 if (query.isNotEmpty()) {
                     val fetchedCharacters =
                         getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
+//
                     _isLoading.value = true
-                    loading.value = true
-                    Log.d("CharacterViewModel", "loading: ${loading.value}")
-                    Log.d("CharacterViewModel", "loadingState: ${loadingState.value}")
                     _characters.value = fetchedCharacters
                     _character_for_details.value = fetchedCharacters
+                    loading_state.value = true
 
-
-                }else{
-                    loading.value = false
                 }
             } catch (e: Exception) {
+//                Log.e("CharacterViewModel", "Error loading characters", e)
             } finally {
                 _isLoading.value = false
-                loading.value = false
-                Log.d("CharacterViewModel", "loading: ${loading.value}")
-                Log.d("CharacterViewModel", "loadingState: ${loadingState.value}")
+//                Log.d("CharacterViewModel", "Loading complete")
+                loading_state.value = false
 
 
             }
@@ -72,7 +69,6 @@ class CharacterViewModel(
         }
 
     }
-
 
     private fun startSearchObservation() {
         viewModelScope.launch {

@@ -8,8 +8,8 @@ import com.example.marvel_app.data.framework.network.RetrofitClient
 import com.example.marvel_app.data.repository.RepositoryImpl
 import com.example.marvel_app.domain.usecase.FetchCharacterDetailsUseCase
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
-import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
+import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 
 fun initializeDependencies(context: Context): Pair<CharacterViewModel, CharacterDetailsViewModel> {
@@ -32,7 +32,7 @@ fun initializeDependencies(context: Context): Pair<CharacterViewModel, Character
         comicDao = comicDao,
         seriesDao = seriesDao,
         eventDao = eventDao,
-        context = context
+//        context = context
 
     )
 
