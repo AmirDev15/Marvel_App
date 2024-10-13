@@ -1,8 +1,9 @@
 package com.example.marvel_app.domain.usecase
 
 import com.example.marvel_app.domain.entity.CharacterDetailItem
+import javax.inject.Inject
 
-class FetchCharacterDetailsUseCase(private val repository: RepositoryDomain) {
+class FetchCharacterDetailsUseCase @Inject constructor (private val repository: RepositoryDomain) {
     suspend fun execute(characterId: Int): Triple<List<CharacterDetailItem>, List<CharacterDetailItem>, List<CharacterDetailItem>> {
         return try {
             repository.fetchCharacterDetails(characterId)

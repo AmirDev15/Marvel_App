@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 import javax.crypto.Cipher.PUBLIC_KEY
 
 
-object RetrofitClient {
+object RetrofitClient  {
 
     private const val BASE_URL = "https://gateway.marvel.com/"
 

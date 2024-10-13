@@ -68,7 +68,7 @@ class RepositoryImplTest {
             mockComicDao,
             mockSeriesDao,
             mockEventDao,
-            mock()
+
         )
     }
 

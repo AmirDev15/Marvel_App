@@ -3,17 +3,23 @@ package com.example.marvel_app.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marvel_app.di.UseCaseModule
 import com.example.marvel_app.domain.entity.CharacterDetailItem
 import com.example.marvel_app.domain.usecase.FetchCharacterDetailsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CharacterDetailsViewModel(
+@HiltViewModel
+
+class CharacterDetailsViewModel  @Inject constructor (
     val fetchComicsAndSeriesUseCase: FetchCharacterDetailsUseCase,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
+    @UseCaseModule.IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _comics = MutableStateFlow<List<CharacterDetailItem>>(emptyList())

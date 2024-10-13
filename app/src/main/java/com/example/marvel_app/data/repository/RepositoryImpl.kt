@@ -20,13 +20,16 @@ import com.example.marvel_app.data.repository.mapper.responseTOentity.responseSe
 import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.entity.CharacterDetailItem
 import com.example.marvel_app.domain.usecase.RepositoryDomain
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class RepositoryImpl(
+
+class RepositoryImpl @Inject constructor (
     private val apiService: MarvelApiService,
     private val characterDao: CharacterDao,
     private val comicDao: ComicDao,
@@ -46,7 +49,7 @@ class RepositoryImpl(
         term: String?,
     ): List<Character> {
         val characters = characterDao.searchCharactersByName(term) ?: emptyList()
-
+//characterDao.deleteAll()
         if (characters.isNotEmpty()) {
             return characterEntityToDomain(characters)
         } else {

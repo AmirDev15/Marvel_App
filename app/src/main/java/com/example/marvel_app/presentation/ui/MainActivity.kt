@@ -4,26 +4,30 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.marvel_app.presentation.ui.navigation.Navigation
-import com.example.marvel_app.data.framework.database.initializeDependencies
+import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
+import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
 
-            val (characterViewModel, characterDetailsViewModel) = initializeDependencies(this)
 
             setContent {
-                Navigation(
-                    viewModel = characterViewModel,
-                    CharacterDetailsViewModel = characterDetailsViewModel
-                )
+                Navigation()
+                Log.d("Character_check", "Navigation content set")
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("MainActivity", "Error initializing dependencies: ${e.message}")
-        }
+
+
+
     }
+
 }
 

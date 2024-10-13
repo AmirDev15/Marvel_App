@@ -47,12 +47,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.marvel_app.data.framework.util.NetworkStateMessage
-import com.example.marvel_app.data.framework.util.checkIfOnline
 import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.entity.CharacterDetailItem
 import com.example.marvel_app.presentation.viewmodel.CharacterDetailsViewModel
@@ -67,7 +66,7 @@ fun CharacterDetailsScreen(
     viewModel: CharacterViewModel,
     navController: NavController,
 
-) {
+    ) {
 
     val context = LocalContext.current
     val characterForDetail by viewModel.characterForDetails.collectAsState()

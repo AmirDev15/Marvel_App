@@ -62,7 +62,7 @@ class RepositoryImplTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = RepositoryImpl(
-            mockApiService, mockCharacterDao, mockComicDao, mockSeriesDao, mockEventDao, context
+            mockApiService, mockCharacterDao, mockComicDao, mockSeriesDao, mockEventDao,
         )
     }
 

@@ -2,9 +2,11 @@ package com.example.marvel_app.domain.usecase
 
 
 import com.example.marvel_app.domain.entity.Character
+import javax.inject.Inject
 
 
-class FetchCharactersUseCase(private val repository: RepositoryDomain) {
+
+class FetchCharactersUseCase @Inject constructor (private val repository: RepositoryDomain) {
 
     suspend operator fun invoke(limit: Int, offset: Int, term: String?): List<Character> {
 

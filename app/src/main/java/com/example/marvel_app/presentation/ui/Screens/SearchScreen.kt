@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.marvel_app.data.framework.util.NetworkStateMessage
 import com.example.marvel_app.data.framework.util.checkIfOnline
@@ -27,10 +28,11 @@ import com.example.marvel_app.presentation.viewmodel.CharacterViewModel
 
 @Composable
 fun Search(viewModel: CharacterViewModel, navController: NavController) {
-    val context = LocalContext.current
+//    val context = LocalContext.current
+
     val characters by viewModel.characters.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+
 
     Log.d("CharacterViewModel", "characters: $characters")
     Log.d("CharacterViewModel", "loading view: $loadingState")
@@ -70,19 +72,6 @@ fun Search(viewModel: CharacterViewModel, navController: NavController) {
 //                        .align(Alignment.TopCenter)
 //                )
 //            }
-            errorMessage?.let {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Snackbar(
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    action = {
-                        Button(onClick = { /* Dismiss or Retry Action */ }) {
-                            Text("Retry")
-                        }
-                    }
-                ) {
-                    Text(it)
-                }
-            }}
 
 //            if (!checkIfOnline(context)) {
 //                Log.d("RepositoryImpl", "No internet connection")

@@ -1,9 +1,12 @@
 package com.example.marvel_app.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marvel_app.di.UseCaseModule
 import com.example.marvel_app.domain.entity.Character
 import com.example.marvel_app.domain.usecase.FetchCharactersUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -12,12 +15,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @OptIn(FlowPreview::class)
-class CharacterViewModel(
+
+@HiltViewModel
+class CharacterViewModel @Inject constructor (
     val getMarvelCharactersUseCase: FetchCharactersUseCase,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    @UseCaseModule.IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 
     ) : ViewModel() {
 
@@ -35,9 +41,6 @@ class CharacterViewModel(
     val _searchQuery = MutableStateFlow("")
 
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> get() = _errorMessage
-
     private val loading = MutableStateFlow(false)
     val loadingState: StateFlow<Boolean> get() = loading
 
@@ -47,8 +50,7 @@ class CharacterViewModel(
 //            Log.d("CharacterViewModel", "Loading characters with query: $query")
             try {
                 if (query.isNotEmpty()) {
-                    val fetchedCharacters =
-                        getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
+                    val fetchedCharacters = getMarvelCharactersUseCase(limit = 10, offset = 0, term = query)
 //
                     _isLoading.value = true
                     _characters.value = fetchedCharacters
@@ -57,7 +59,7 @@ class CharacterViewModel(
 
                 }
             } catch (e: Exception) {
-//                Log.e("CharacterViewModel", "Error loading characters", e)
+//                Log.d("CharacterViewModel", "Error loading characters", e)
             } finally {
                 _isLoading.value = false
 //                Log.d("CharacterViewModel", "Loading complete")
